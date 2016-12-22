@@ -1,0 +1,4 @@
+<a [href]="authenticateLink()">Authenticate</a>
+<button (click)="turnOn()">On</button>
+<button (click)="turnOff()">Off</button>
+<app-smart-things-switch *ngFor="let switch of switches" [lightSwitch]="switch"></app-smart-things-switch>

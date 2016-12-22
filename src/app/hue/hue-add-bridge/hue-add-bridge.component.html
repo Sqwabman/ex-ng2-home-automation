@@ -1,0 +1,27 @@
+<div>
+  Add Hue Bridge
+</div>
+<div [ngSwitch]="state">
+  <div *ngSwitchCase="'get'">
+    Getting list of bridges.
+  </div>
+  <div *ngSwitchCase="'select'">
+    <div *ngIf="ips.length > 0">
+      <div *ngFor="let ip of ips">
+        <button (click)="selectedIP(ip)">{{ip}}</button>
+      </div>
+    </div>
+    <div *ngIf="ips.length === 0">
+      <input #enteredIP type="text">
+      <button (click)="selectedIP(enteredIP.value)">Find</button>
+    </div>
+  </div>
+  <div *ngSwitchCase="'button'">
+    Please press the button on the hue bridge then handshake.
+    <button (click)="selectedIP(ip)">Handshake</button>
+  </div>
+  <div *ngSwitchCase="'created'"></div>
+  <div *ngSwitchDefault>
+    Please wait...
+  </div>
+</div>

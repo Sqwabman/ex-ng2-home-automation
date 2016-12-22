@@ -1,0 +1,13 @@
+<div *ngIf="bridge">
+  <div>
+    {{bridge.ip}}
+  </div>
+  <div *ngIf="bridge.lights">
+    <div *ngFor="let light of bridge.lights">
+      <app-hue-light [light]="light"></app-hue-light>
+    </div>
+  </div>
+  <div>
+    <button (click)="refresh()">refresh</button>
+  </div>
+</div>

@@ -1,0 +1,14 @@
+.component{
+  height: 20px;
+}
+
+.holder{
+  height: 100%;
+  background-color: black;
+}
+
+.indicator{
+  height: 100%;
+  position: relative;
+  background-color: green;
+}

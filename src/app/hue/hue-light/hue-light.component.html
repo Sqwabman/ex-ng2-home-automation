@@ -1,0 +1,11 @@
+<div *ngIf="light">
+  <div class="form-group">
+    <label class="control-label"></label>
+    <div>{{light.info.name}}</div>
+  </div>
+  <button (click)="toggle(light)">{{!light.info.state.on? 'On' : 'Off'}}</button>
+  <button (click)="colorLoop(light)">Loop</button>
+  <div class="space">
+    <app-slider [value]="sliderX" [width]="500" (change)="colorChange($event)"></app-slider>
+  </div>
+</div>
