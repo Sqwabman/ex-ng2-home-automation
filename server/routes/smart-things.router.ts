@@ -22,14 +22,26 @@ smartThingsRouter.get('/authenticated', (req: Request, res: Response, next: Next
   res.json(smartthings.isAuthenticated());
 });
 
+
 /**
  * GET get token
  */
-smartThingsRouter.get('/token/:code', (req: Request, res: Response, next: NextFunction) => {
+smartThingsRouter.get('/token/:code/:callback', (req: Request, res: Response, next: NextFunction) => {
   let code = req.params.code;
+  let callback = req.params.callback;
 
-  request.post(`${TOKEN_URL}?grant_type=authorization_code&code=${code}&client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&redirect_uri=${CALLBACK_URL}`)
-    .pipe(res);
+  console.log('code', code);
+  console.log('callback', callback);
+
+  smartthings.getToken(code, callback)
+    .then(result => {
+      res.json(result)
+    })
+    .catch(error => {
+      res.statusCode = 400;
+      console.log('error', error);
+      res.json(error);
+    });
 });
 
 /**

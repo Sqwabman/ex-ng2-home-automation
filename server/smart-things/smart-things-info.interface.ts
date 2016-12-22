@@ -1,4 +1,4 @@
+import {AccessToken} from "./access-token.interface";
 export interface SmartThingsInfo {
-
-  isAuthenticated: boolean;
+  accessToken: AccessToken;
 }

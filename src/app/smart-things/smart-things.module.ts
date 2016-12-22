@@ -6,7 +6,8 @@ import {SmartThingsSummaryComponent} from './smart-things-summary/smart-things-s
 import {SmartThingsAccountComponent} from './smart-things-account/smart-things-account.component';
 import {SmartThingsService} from "./services/smart-things.service";
 import {SmartThingsSwitchComponent} from './smart-things-switch/smart-things-switch.component';
-import {SmartThingsAuthComponent} from "./smart-things-auth/smart-things-auth.component";
+import {SmartThingsAuthResolve} from "./services/smart-things-auth.resolve";
+import { AuthComponent } from './auth/auth.component';
 
 
 const smartThingsRoutes: Routes = [
@@ -25,7 +26,7 @@ const smartThingsRoutes: Routes = [
       },
       {
         path: 'auth',
-        component: SmartThingsAuthComponent,
+        component: AuthComponent,
       }
     ],
   }
@@ -40,10 +41,11 @@ const smartThingsRoutes: Routes = [
     SmartThingsSummaryComponent,
     SmartThingsAccountComponent,
     SmartThingsSwitchComponent,
-    SmartThingsAuthComponent,
+    AuthComponent,
   ],
   providers: [
     SmartThingsService,
+    SmartThingsAuthResolve,
   ],
 })
 export class SmartThingsModule {

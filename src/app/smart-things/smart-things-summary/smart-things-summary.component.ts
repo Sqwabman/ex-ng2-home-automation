@@ -11,11 +11,11 @@ export class SmartThingsSummaryComponent implements OnInit {
   switches: SmartThingsSwitch[];
 
   constructor(private smartService: SmartThingsService) {
-    this.smartService.isAuthenticated()
-      .then(i => smartService.getSwitches())
-      .then(switches => this.switches = switches)
-      .then(s => console.log(this.switches))
-      .catch(error => console.log(error));
+    //this.smartService.isAuthenticated();
+      // .then(i => smartService.getSwitches())
+      // .then(switches => this.switches = switches)
+      // .then(s => console.log(this.switches))
+      // .catch(error => console.log(error));
   }
 
   ngOnInit() {
@@ -25,12 +25,12 @@ export class SmartThingsSummaryComponent implements OnInit {
     return this.smartService.authenticateLink();
   }
 
-  turnOn() {
-    this.smartService.allSwitchesOn();
-  }
-
-  turnOff() {
-    this.smartService.allSwitchesOff();
-  }
+  // turnOn() {
+  //   this.smartService.allSwitchesOn();
+  // }
+  //
+  // turnOff() {
+  //   this.smartService.allSwitchesOff();
+  // }
 
 }

@@ -8,7 +8,7 @@
     "baseUrl": "./",
     "module": "es6",
     "moduleResolution": "node",
-    "outDir": "../dist/out-tsc",
+    "outDir": "../dist/client/out-tsc",
     "sourceMap": true,
     "target": "es5",
     "typeRoots": [
