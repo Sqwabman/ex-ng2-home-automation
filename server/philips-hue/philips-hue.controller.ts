@@ -10,19 +10,11 @@ const DEFAULT_CONFIG = 'philips-hue.json';
 const UTF8 = 'utf8';
 
 export class PhilipsHueController {
-  private static singleton: PhilipsHueController;
   private config: string;
   private http: Http;
   private info: PhilipsHueInfo;
 
-  static getController(): PhilipsHueController{
-    if(PhilipsHueController.singleton)
-      return PhilipsHueController.singleton;
-
-    return PhilipsHueController.singleton = new PhilipsHueController();
-  }
-
-  private constructor(options: {
+  public constructor(options: {
     config?: string,
   } = {}) {
     this.http = new Http();

@@ -1,5 +1,5 @@
 import {HueBridge} from "./hue-bridge.interface";
-export class HueKey {
+export interface HueKey {
   id: string;
   bridge: HueBridge;
 }

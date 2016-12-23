@@ -2,8 +2,12 @@ import * as express from 'express';
 import {json, urlencoded} from 'body-parser';
 import * as path from 'path';
 import * as compression from 'compression';
-import {smartThingsRouter} from './routes/smart-things.router';
-import {philipsHueRouter} from "./routes/philips-hue.router";
+import {PhilipsHueRouter} from "./routes/philips-hue.router";
+import {PhilipsHueController} from "./philips-hue/philips-hue.controller";
+import {SmartThingsController} from "./smart-things/smart-things.controller";
+import {LightController} from "./lights/light.controller";
+import {SmartThingsRouter} from "./routes/smart-things.router";
+import {LightRouter} from "./routes/light.router";
 
 const app: express.Application = express();
 
@@ -13,9 +17,14 @@ app.use(json());
 app.use(compression());
 app.use(urlencoded({extended: true}));
 
+let hue = new PhilipsHueController();
+let smart = new SmartThingsController();
+let light = new LightController(hue, smart);
+
 // api routes
-app.use('/api/smart', smartThingsRouter);
-app.use('/api/hue', philipsHueRouter);
+app.use('/api/smart', SmartThingsRouter.init(smart));
+app.use('/api/hue', PhilipsHueRouter.init(hue));
+app.use('/api/lights', LightRouter.init(light));
 
 if (app.get('env') === 'production') {
 

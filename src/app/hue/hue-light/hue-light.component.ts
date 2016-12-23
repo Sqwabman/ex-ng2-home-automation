@@ -20,21 +20,21 @@ export class HueLightComponent implements OnInit {
   ngOnInit() {
   }
 
-  toggle(light: HueLight) {
-    this.hueService.toggleLight(light);
-  }
-
-  colorLoop(light: HueLight) {
-    this.hueService.colorLoop(light);
-  }
-
-  get sliderX(): number {
-    return this.light.info.state.hue / MAX_HUE;
-  }
-
-  colorChange(value: number){
-    console.log(value * MAX_HUE);
-    this.hueService.setLightHue(this.light, value * MAX_HUE);
-  }
+  // toggle(light: HueLight) {
+  //   this.hueService.toggleLight(light);
+  // }
+  //
+  // colorLoop(light: HueLight) {
+  //   this.hueService.colorLoop(light);
+  // }
+  //
+  // get sliderX(): number {
+  //   return this.light.info.state.hue / MAX_HUE;
+  // }
+  //
+  // colorChange(value: number){
+  //   console.log(value * MAX_HUE);
+  //   this.hueService.setLightHue(this.light, value * MAX_HUE);
+  // }
 
 }

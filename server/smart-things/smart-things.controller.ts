@@ -15,19 +15,11 @@ const DEFAULT_CONFIG = 'smartthings.json';
 const UTF8 = 'utf8';
 
 export class SmartThingsController {
-  private static singleton: SmartThingsController;
   private config: string;
   private info: SmartThingsInfo;
   private http: Http;
 
-  static getController(): SmartThingsController {
-    if (SmartThingsController.singleton)
-      return SmartThingsController.singleton;
-
-    return SmartThingsController.singleton = new SmartThingsController();
-  }
-
-  private constructor(options: {
+  public constructor(options: {
     config?: string,
   } = {}) {
     this.http = new Http();
@@ -78,7 +70,7 @@ export class SmartThingsController {
       });
   }
 
-  public getSwitches(): Promise<SmartThingsSwitch> {
+  public getSwitches(): Promise<SmartThingsSwitch[]> {
     return this.http.get(`${this.info.endpoints[0].uri}/switches`, this.getHeader());
   }
 

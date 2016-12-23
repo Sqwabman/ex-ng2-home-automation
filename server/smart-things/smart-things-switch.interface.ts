@@ -1,5 +1,6 @@
+import {SmartThingsKey} from "./smart-things-key.interface";
 export interface SmartThingsSwitch{
-  id: string;
+  id: SmartThingsKey;
   name: string;
   on: boolean;
 }
