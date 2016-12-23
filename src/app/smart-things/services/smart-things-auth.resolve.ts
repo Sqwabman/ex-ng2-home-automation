@@ -16,7 +16,7 @@ export class SmartThingsAuthResolve implements CanActivate {
 
     if (code) {
       console.debug('Going to send code');
-      return this.smartService.sendCode(code)
+      return this.smartService.authenticate(code)
         .then(() => this.router.navigate(['../summary', {queryParams: {}}]));
     }
     return true;

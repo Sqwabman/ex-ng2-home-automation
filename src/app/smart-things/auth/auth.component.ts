@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Router, ActivatedRoute} from "@angular/router";
 import {SmartThingsService} from "../services/smart-things.service";
 
@@ -15,8 +15,10 @@ export class AuthComponent implements OnInit {
     let code = route.snapshot.queryParams[CODE_PARAM];
 
     if (code) {
-      this.smartService.sendCode(code)
-        .then(() => this.router.navigate(['../summary', {queryParams: {}}]));
+      this.smartService.authenticate(code)
+        .then(() => {
+          return this.router.navigate(['/smart/summary'], {queryParams: {}});
+        });
     }
   }
 

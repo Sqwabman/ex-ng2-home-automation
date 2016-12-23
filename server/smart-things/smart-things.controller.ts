@@ -1,27 +1,28 @@
 import * as fs from 'fs';
 import {SmartThingsInfo} from "./smart-things-info.interface";
-import * as request from 'request';
+import {AccessToken} from "./access-token.interface";
+import {Http} from "../utility/http";
+import {SmartThingsSwitch} from "./smart-things-switch.interface";
 
-const CLIENT_SECRET = '22c47bf2-6f86-4e61-8484-846289e437ad';
-const CLIENT_ID = encodeURIComponent('35c643e1-5df3-4df8-8541-0e7261fa5154');
+export const CLIENT_ID = 'f74b7343-f83b-4335-8a30-bf1e1e94f1ad';
+const CLIENT_SECRET = '58a8906a-7cd6-4e5e-b211-7a1eeb715c5c';
 
-const AUTH_URL = 'https://graph.api.smartthings.com/oauth/authorize';
+export const AUTH_URL = 'https://graph.api.smartthings.com/oauth/authorize';
 const TOKEN_URL = 'https://graph.api.smartthings.com/oauth/token';
 const ENDPOINT_URL = 'https://graph.api.smartthings.com/api/smartapps/endpoints';
 
 const DEFAULT_CONFIG = './smartthings.json';
 const UTF8 = 'utf8';
-const ERROR = 'error';
-const DATA = 'data';
-const END = 'end';
 
 export class SmartThingsController {
   private config: string;
-  private info: SmartThingsInfo
+  private info: SmartThingsInfo;
+  private http: Http;
 
   constructor(options: {
     config?: string,
   } = {}) {
+    this.http = new Http();
     this.config = options.config || DEFAULT_CONFIG;
     fs.exists(this.config, (exists) => {
       if (exists) {
@@ -29,46 +30,61 @@ export class SmartThingsController {
         this.info = JSON.parse(fs.readFileSync(this.config, UTF8));
       }
       else {
-        this.info = {accessToken: null};
+        this.info = {accessToken: null, endpoints: null};
       }
     });
   }
 
-  isAuthenticated(): boolean {
-    return this.info.accessToken !== null;
+  public isAuthenticated(): boolean {
+    return this.info.endpoints !== null;
   }
 
-  getAuthenticationUrl() {
+  public getAuthenticationUrl(): string {
     return `${AUTH_URL}?response_type=code&client_id=${CLIENT_ID}&scope=app&redirect_uri=`;
   }
 
-  getToken(code: string, callbackUrl: string): Promise<boolean> {
-    let resolve: (result: boolean) => void;
-    let reject: (error: any) => void;
+  public getAuthentication(code: string, callbackUrl: string): Promise<boolean> {
+    return this.http.get(`${TOKEN_URL}?grant_type=authorization_code&code=${code}&client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&redirect_uri=${callbackUrl}`)
+      .then(token => this.getEndPoints(token, callbackUrl));
+  }
 
-    let body = '';
-    request.get(`${TOKEN_URL}?grant_type=authorization_code&code=${code}&client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&redirect_uri=${callbackUrl}`)
-      .on(ERROR, (response) => {
-        reject(response);
-      })
-      .on(DATA, (data)=>{
-        body += data;
-      })
-      .on(END, () => {
-        this.info.accessToken = JSON.parse(body);
-        this.saveInfo();
+  private getEndPoints(accessToken: AccessToken, callbackUrl: string): Promise<boolean> {
+    return this.http.get(`${ENDPOINT_URL}?grant_type=authorization_code&client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&redirect_uri=${callbackUrl}`, this.getHeader())
+      .then(endpoints => {
+        //if there is at least one endpoint
+        if (endpoints && endpoints.length > 0) {
+          //create the info
+          this.info.accessToken = accessToken;
+          this.info.endpoints = endpoints;
 
-        resolve(true);
+          //save to config
+          this.saveInfo();
+
+          //show success
+          return true;
+        }
+        //something went wrong so bail
+        else {
+          throw new Error('The response from SmartThings did not contain any endpoints.');
+        }
       });
+  }
 
-    return new Promise((r1, r2) => {
-      resolve = r1;
-      reject = r2;
-    });
+  public getSwitches(): Promise<SmartThingsSwitch> {
+    return this.http.get(`${this.info.endpoints[0].uri}/switches`, this.getHeader());
+  }
+
+  public changeSwitchState(id: string, state: string): Promise<boolean> {
+    return this.http.put(`${this.info.endpoints[0].uri}/switches/${id}/${state}`, this.getHeader())
+      .then(() => true);
   }
 
   private saveInfo() {
     console.log('smartthings config', this.info);
     fs.writeFile(this.config, JSON.stringify(this.info));
+  }
+
+  private getHeader(): any {
+    return {auth: {bearer: this.info.accessToken.access_token}}
   }
 }

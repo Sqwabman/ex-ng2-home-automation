@@ -1,19 +1,15 @@
 import {Injectable} from '@angular/core';
-import {Http, Headers} from "@angular/http";
-import {SmartThingsSwitch} from "../models/smart-things-switch.interface";
+import {Http} from "@angular/http";
 import {ActivatedRoute} from "@angular/router";
-import {Endpoint} from "../models/endpoint.interface";
+import {SmartThingsSwitch} from "../../../../server/smart-things/smart-things-switch.interface";
+import {AUTH_URL, CLIENT_ID} from "../../../../server/smart-things/smart-things.controller";
 
-const AUTH_URL = 'https://graph.api.smartthings.com/oauth/authorize';
 const CALLBACK_URL = encodeURIComponent('http://localhost:4200/smart/auth');
-const CLIENT_ID = encodeURIComponent('35c643e1-5df3-4df8-8541-0e7261fa5154');
 
-const CODE_PARAM = 'code';
 const SMART_API = 'api/smart';
 
 @Injectable()
 export class SmartThingsService {
-  endpoints: Endpoint[];
 
   constructor(private http: Http, private route: ActivatedRoute) {
   }
@@ -28,10 +24,16 @@ export class SmartThingsService {
     return `${AUTH_URL}?response_type=code&client_id=${CLIENT_ID}&scope=app&redirect_uri=${CALLBACK_URL}`;
   }
 
-  sendCode(code: string): Promise<boolean>{
+  authenticate(code: string): Promise<boolean> {
     console.debug('Code', code);
     return this.http.get(`${SMART_API}/token/${code}/${CALLBACK_URL}`)
       .toPromise();
+  }
+
+  getSwitches(): Promise<SmartThingsSwitch[]> {
+    return this.http.get(`${SMART_API}/smart/`)
+      .toPromise()
+      .then(switches => switches.json() as SmartThingsSwitch[]);
   }
 
   // getEndpoints(): Promise<any> {

@@ -1,15 +1,5 @@
 import {Router, Request, Response, NextFunction} from 'express';
-import * as request from 'request';
-import * as JSONStream from 'JSONStream';
 import {SmartThingsController} from "../smart-things/smart-things.controller";
-
-const CALLBACK_URL = encodeURIComponent('http://localhost:4200/smart/summary');
-const CLIENT_SECRET = '22c47bf2-6f86-4e61-8484-846289e437ad';
-const CLIENT_ID = encodeURIComponent('35c643e1-5df3-4df8-8541-0e7261fa5154');
-
-const TOKEN_URL = 'https://graph.api.smartthings.com/oauth/token';
-
-const ENDPOINT_URL = 'https://graph.api.smartthings.com/api/smartapps/endpoints';
 
 const smartThingsRouter: Router = Router();
 
@@ -19,7 +9,13 @@ let smartthings = new SmartThingsController();
  * GET get token
  */
 smartThingsRouter.get('/authenticated', (req: Request, res: Response, next: NextFunction) => {
-  res.json(smartthings.isAuthenticated());
+  if(smartthings.isAuthenticated()){
+    res.json(smartthings.isAuthenticated());
+  }
+  else{
+    res.statusCode = 400;
+    res.json(smartthings.getAuthenticationUrl());
+  }
 });
 
 
@@ -33,7 +29,7 @@ smartThingsRouter.get('/token/:code/:callback', (req: Request, res: Response, ne
   console.log('code', code);
   console.log('callback', callback);
 
-  smartthings.getToken(code, callback)
+  smartthings.getAuthentication(code, callback)
     .then(result => {
       res.json(result)
     })
@@ -45,31 +41,29 @@ smartThingsRouter.get('/token/:code/:callback', (req: Request, res: Response, ne
 });
 
 /**
- * GET endpoints
- */
-smartThingsRouter.get('/endpoints/:bearer', (req: Request, res: Response, next: NextFunction) => {
-  request.get(`${ENDPOINT_URL}?grant_type=authorization_code&client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&redirect_uri=${CALLBACK_URL}`, {auth: {bearer: req.params.bearer}})//.pipe(res)
-    .pipe(res);
-  // .pipe(JSONStream.parse('*'))
-  // .on('data', (data) => {
-  //     console.log(data);
-  // });
-});
-
-/**
  * GET list of switches
  */
-smartThingsRouter.get('/switches/:bearer/:endpoint', (req: Request, res: Response, next: NextFunction) => {
-  request.get(`${ENDPOINT_URL}?grant_type=authorization_code&client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&redirect_uri=${CALLBACK_URL}`, {auth: {bearer: req.params.bearer}})
-    .pipe(JSONStream.parse('*'));
+smartThingsRouter.get('/switches', (req: Request, res: Response, next: NextFunction) => {
+  smartthings.getSwitches()
+    .then(switches => res.json(switches))
+    .catch(error => {
+      res.statusCode = 400;
+      console.log('error', error);
+      res.json(error);
+    });
 });
 
 /**
- * PUT toggle the state of the switch
+ * PUT change the state of a light
  */
-smartThingsRouter.get('/switches/toggle/:bearer/:endpoint', (req: Request, res: Response, next: NextFunction) => {
-  request.get(`${req.params.endpoint}/switches`,
-    {auth: {bearer: req.params.bearer}}).pipe(res);
+smartThingsRouter.get('/switches/:id/:state', (req: Request, res: Response, next: NextFunction) => {
+  smartthings.changeSwitchState(req.params.id, req.params.state)
+    .then(() => res.json(true))
+    .catch(error => {
+      res.statusCode = 400;
+      console.log('error', error);
+      res.json(error);
+    });
 });
 
 export {smartThingsRouter};

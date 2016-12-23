@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {SmartThingsService} from "../services/smart-things.service";
-import {SmartThingsSwitch} from "../models/smart-things-switch.interface";
+import {SmartThingsSwitch} from "../../../../server/smart-things/smart-things-switch.interface";
 
 @Component({
   selector: 'app-smart-things-summary',

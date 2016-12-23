@@ -1,5 +1,5 @@
 import {Component, OnInit, Input} from '@angular/core';
-import {SmartThingsSwitch} from "../models/smart-things-switch.interface";
+import {SmartThingsSwitch} from "../../../../server/smart-things/smart-things-switch.interface";
 
 @Component({
   selector: 'app-smart-things-switch',
