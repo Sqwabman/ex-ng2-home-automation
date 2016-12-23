@@ -3,6 +3,7 @@ import {json, urlencoded} from 'body-parser';
 import * as path from 'path';
 import * as compression from 'compression';
 import {smartThingsRouter} from './routes/smart-things.router';
+import {philipsHueRouter} from "./routes/philips-hue.router";
 
 const app: express.Application = express();
 
@@ -14,6 +15,7 @@ app.use(urlencoded({extended: true}));
 
 // api routes
 app.use('/api/smart', smartThingsRouter);
+app.use('/api/hue', philipsHueRouter);
 
 if (app.get('env') === 'production') {
 

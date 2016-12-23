@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
 import {Http, Headers} from "@angular/http";
-import {HueInformation} from "../models/hue-information.interface";
-import {HueResponse} from "../models/hue-response.interface";
-import {HueBridge} from "../models/hue-bridge.interface";
+import {HueInformation} from "../../../../server/philips-hue/hue-information.interface";
+import {HueResponse} from "../../../../server/philips-hue/hue-response.interface";
+import {HueBridge} from "../../../../server/philips-hue/hue-bridge.interface";
 import '../../rxjs-extensions';
-import {HueLight} from "../models/hue-light.interface";
-import {HueState} from "../models/hue-state.interface";
+import {HueLight} from "../../../../server/philips-hue/hue-light.interface";
+import {HueState} from "../../../../server/philips-hue/hue-state.interface";
 
 @Injectable()
 export class HueService {

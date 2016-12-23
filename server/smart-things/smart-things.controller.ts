@@ -11,22 +11,30 @@ export const AUTH_URL = 'https://graph.api.smartthings.com/oauth/authorize';
 const TOKEN_URL = 'https://graph.api.smartthings.com/oauth/token';
 const ENDPOINT_URL = 'https://graph.api.smartthings.com/api/smartapps/endpoints';
 
-const DEFAULT_CONFIG = './smartthings.json';
+const DEFAULT_CONFIG = 'smartthings.json';
 const UTF8 = 'utf8';
 
 export class SmartThingsController {
+  private static singleton: SmartThingsController;
   private config: string;
   private info: SmartThingsInfo;
   private http: Http;
 
-  constructor(options: {
+  static getController(): SmartThingsController {
+    if (SmartThingsController.singleton)
+      return SmartThingsController.singleton;
+
+    return SmartThingsController.singleton = new SmartThingsController();
+  }
+
+  private constructor(options: {
     config?: string,
   } = {}) {
     this.http = new Http();
     this.config = options.config || DEFAULT_CONFIG;
     fs.exists(this.config, (exists) => {
       if (exists) {
-        console.log('Reading config', this.config);
+        console.log('Reading smartthings config', this.config);
         this.info = JSON.parse(fs.readFileSync(this.config, UTF8));
       }
       else {

@@ -1,8 +1,7 @@
 import {HueState} from "./hue-state.interface";
-import {HueBridge} from "./hue-bridge.interface";
+import {HueKey} from "./hue-key.interface";
 export interface HueLight {
-  id: string;
-  bridge: HueBridge;
+  key: HueKey;
   info: {
     state: HueState,
     type: string,

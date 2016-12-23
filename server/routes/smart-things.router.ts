@@ -3,14 +3,14 @@ import {SmartThingsController} from "../smart-things/smart-things.controller";
 
 const smartThingsRouter: Router = Router();
 
-let smartthings = new SmartThingsController();
+let smartthings = SmartThingsController.getController();
 
 /**
- * GET get token
+ * GET if there is a config available
  */
 smartThingsRouter.get('/authenticated', (req: Request, res: Response, next: NextFunction) => {
   if(smartthings.isAuthenticated()){
-    res.json(smartthings.isAuthenticated());
+    res.json(true);
   }
   else{
     res.statusCode = 400;

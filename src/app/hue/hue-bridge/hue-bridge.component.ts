@@ -1,5 +1,5 @@
 import {Component, OnInit, Input} from '@angular/core';
-import {HueBridge} from "../models/hue-bridge.interface";
+import {HueBridge} from "../../../../server/philips-hue/hue-bridge.interface";
 import {HueService} from "../services/hue.service";
 
 @Component({

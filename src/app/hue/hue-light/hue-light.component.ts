@@ -1,5 +1,5 @@
 import {Component, OnInit, Input} from '@angular/core';
-import {HueLight} from "../models/hue-light.interface";
+import {HueLight} from "../../../../server/philips-hue/hue-light.interface";
 import {HueService} from "../services/hue.service";
 
 const MAX_HUE = 65535;
