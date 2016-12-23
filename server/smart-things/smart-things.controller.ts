@@ -14,6 +14,9 @@ const ENDPOINT_URL = 'https://graph.api.smartthings.com/api/smartapps/endpoints'
 const DEFAULT_CONFIG = 'smartthings.json';
 const UTF8 = 'utf8';
 
+const ON = 'on';
+const OFF = 'off';
+
 export class SmartThingsController {
   private config: string;
   private info: SmartThingsInfo;
@@ -74,8 +77,8 @@ export class SmartThingsController {
     return this.http.get(`${this.info.endpoints[0].uri}/switches`, this.getHeader());
   }
 
-  public changeSwitchState(id: string, state: string): Promise<boolean> {
-    return this.http.put(`${this.info.endpoints[0].uri}/switches/${id}/${state}`, this.getHeader())
+  public changeSwitchState(id: string, state: boolean): Promise<boolean> {
+    return this.http.put(`${this.info.endpoints[0].uri}/switches/${id}/${state ? ON : OFF}`, this.getHeader())
       .then(() => true);
   }
 

@@ -4,9 +4,10 @@ import {FormsModule} from '@angular/forms';
 import {HttpModule} from '@angular/http';
 import {AppComponent} from './app.component';
 import {AppRoutingModule} from "./app-routing.module";
-import {HueModule} from "./hue/hue.module";
 import {SliderModule} from "./slider/slider.module";
-import {SmartThingsModule} from "./smart-things/smart-things.module";
+import {LightModule} from "./light/light.module";
+import {LightService} from "./services/light.service";
+import {LightListResolve} from "./services/light-list.resolve";
 
 @NgModule({
   imports: [
@@ -14,14 +15,16 @@ import {SmartThingsModule} from "./smart-things/smart-things.module";
     FormsModule,
     HttpModule,
     AppRoutingModule,
-    HueModule,
     SliderModule,
-    SmartThingsModule,
+    LightModule,
   ],
   declarations: [
     AppComponent,
   ],
-  providers: [],
+  providers: [
+    LightService,
+    LightListResolve,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

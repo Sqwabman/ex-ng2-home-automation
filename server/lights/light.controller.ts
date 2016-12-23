@@ -6,6 +6,9 @@ import {LightCapabilityType} from "./light-capability-type.enum";
 import {LightCapability} from "./light-capability.interface";
 import {SmartThingsSwitch} from "../smart-things/smart-things-switch.interface";
 import {LightType} from "./light-type.enum";
+import {LightConfiguration} from "./light-configuration.interface";
+import {HueKey} from "../philips-hue/hue-key.interface";
+import {HueState} from "../philips-hue/hue-state.interface";
 
 const DIMMABLE_LIGHT = "Dimmable light";
 const EXTENDED_COLOR_LIGHT = "Extended color light";
@@ -23,6 +26,16 @@ export class LightController {
         .then(switches => switches.map(swi => this.createLightFromSmartSwitch(swi)))
     ])
       .then(values => [].concat.apply([], values));
+  }
+
+  setCapability(config: LightConfiguration): Promise<any> {
+    switch (config.light.type) {
+      case LightType.Smart:
+        return this.smart.changeSwitchState((config.light.key as string), config.capability.state);
+      case LightType.Hue:
+        let key = (config.light.key as HueKey);
+        return this.hue.setLightState(key.bridge, key.id, this.createHueState(config.capability));
+    }
   }
 
   private createLightFromHue(hue: HueLight): Light {
@@ -66,6 +79,12 @@ export class LightController {
       key: swi.id,
       name: swi.name,
       capabilities: [{state: swi.on, type: LightCapabilityType.On_Off}],
+    };
+  }
+
+  private createHueState(capability: LightCapability): HueState {
+    return {
+      on: capability.type === LightCapabilityType.On_Off ? capability.state : null,
     };
   }
 }

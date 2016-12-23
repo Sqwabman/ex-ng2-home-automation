@@ -101,8 +101,8 @@ export class PhilipsHueController {
       });
   }
 
-  public setLightState(ip: string, username: string, id: string, state: any): Promise<HueLight> {
-    let light = this.createLight(id, {ip: ip, username: username});
+  public setLightState(bridge: HueBridge, id: string, state: any): Promise<HueLight> {
+    let light = this.createLight(id, bridge);
 
     console.log('Setting light state', light, state);
     return this.http.put(`${this.lightUri(light)}/state`, {body: JSON.stringify(state)})
