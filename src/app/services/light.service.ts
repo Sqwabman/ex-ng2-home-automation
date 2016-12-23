@@ -18,12 +18,11 @@ export class LightService {
       .then(lights => lights.json() as Light[]);
   }
 
-  setCapability(light: Light, capability: LightCapability): Promise<Light> {
+  setCapabilities(light: Light, capabilities: LightCapability[]): Promise<Light> {
     return this.http.put('api/lights', {
-      light: light,
-      capability: capability,
+      key: light.key,
+      capabilities: capabilities,
     } as LightConfiguration)
-      .toPromise()
-      .then(l => light = l.json());
+      .toPromise();
   }
 }

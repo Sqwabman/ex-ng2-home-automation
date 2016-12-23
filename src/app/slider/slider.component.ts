@@ -1,5 +1,4 @@
 import {Component, OnInit, ElementRef, Input, HostListener, Output, EventEmitter} from '@angular/core';
-import {HueLight} from "../../../server/philips-hue/hue-light.interface";
 
 export interface SliderValue {
   fraction: number;

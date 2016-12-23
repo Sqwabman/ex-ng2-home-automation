@@ -1,5 +1,6 @@
 import {HueBridge} from "./hue-bridge.interface";
-export interface HueKey {
+import {LightKey} from "../lights/light-key.interface";
+export interface HueKey extends LightKey {
   id: string;
   bridge: HueBridge;
 }

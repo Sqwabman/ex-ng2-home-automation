@@ -9,9 +9,14 @@ import {LightType} from "./light-type.enum";
 import {LightConfiguration} from "./light-configuration.interface";
 import {HueKey} from "../philips-hue/hue-key.interface";
 import {HueState} from "../philips-hue/hue-state.interface";
+import {SmartThingsKey} from "../smart-things/smart-things-key.component";
 
 const DIMMABLE_LIGHT = "Dimmable light";
 const EXTENDED_COLOR_LIGHT = "Extended color light";
+
+const MAX_HUE = 65535;
+const MAX_SAT = 254;
+const MAX_BRI = 254;
 
 export class LightController {
 
@@ -29,18 +34,17 @@ export class LightController {
   }
 
   setCapability(config: LightConfiguration): Promise<any> {
-    switch (config.light.type) {
+    switch (config.key.type) {
       case LightType.Smart:
-        return this.smart.changeSwitchState((config.light.key as string), config.capability.state);
+        return this.smart.changeSwitchState((config.key as SmartThingsKey).id, this.getSmartThingsSwitchState(config.capabilities));
       case LightType.Hue:
-        let key = (config.light.key as HueKey);
-        return this.hue.setLightState(key.bridge, key.id, this.createHueState(config.capability));
+        let key = (config.key as HueKey);
+        return this.hue.setLightState(key.bridge, key.id, this.createHueState(config.capabilities));
     }
   }
 
   private createLightFromHue(hue: HueLight): Light {
     return {
-      type: LightType.Hue,
       key: hue.key,
       name: hue.info.name,
       capabilities: this.createHueCapabilityList(hue),
@@ -55,6 +59,7 @@ export class LightController {
       },
       {
         level: hue.info.state.bri,
+        max: MAX_BRI,
         type: LightCapabilityType.Brightness,
       }
     ];
@@ -62,10 +67,12 @@ export class LightController {
     if (hue.info.type === EXTENDED_COLOR_LIGHT) {
       capabilities.push({
         level: hue.info.state.hue,
+        max: MAX_HUE,
         type: LightCapabilityType.Hue,
       });
       capabilities.push({
         level: hue.info.state.sat,
+        max: MAX_SAT,
         type: LightCapabilityType.Saturation,
       });
     }
@@ -75,16 +82,37 @@ export class LightController {
 
   private createLightFromSmartSwitch(swi: SmartThingsSwitch): Light {
     return {
-      type: LightType.Smart,
-      key: swi.id,
+      key: {id: swi.id, type: LightType.Smart} as SmartThingsKey,
       name: swi.name,
       capabilities: [{state: swi.on, type: LightCapabilityType.On_Off}],
     };
   }
 
-  private createHueState(capability: LightCapability): HueState {
-    return {
-      on: capability.type === LightCapabilityType.On_Off ? capability.state : null,
-    };
+  private createHueState(capabilities: LightCapability[]): HueState {
+    let state = {} as HueState;
+    for (let capability of capabilities) {
+      switch (capability.type) {
+        case LightCapabilityType.On_Off:
+          state.on = capability.state;
+          break;
+        case LightCapabilityType.Brightness:
+          state.bri = capability.level;
+          break;
+        case LightCapabilityType.Hue:
+          state.hue = capability.level;
+          break;
+        case LightCapabilityType.Saturation:
+          state.sat = capability.level;
+          break;
+      }
+    }
+    return state;
+  }
+
+  private getSmartThingsSwitchState(capabilities: LightCapability[]) {
+    let onOff = capabilities.find(i => i.type === LightCapabilityType.On_Off);
+
+    if (onOff)
+      return onOff.state;
   }
 }
