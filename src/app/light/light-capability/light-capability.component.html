@@ -1,0 +1,19 @@
+<div *ngIf="capability">
+  <div [ngSwitch]="capability.type" class="slider">
+    <div *ngSwitchCase="types.On_Off" class="slider">
+      <button (click)="stateClick()">{{capability.state ? 'On' : 'Off'}}</button>
+    </div>
+    <div *ngSwitchCase="types.Brightness" class="slider">
+      <label>Brightness</label>
+      <app-slider [value]="capability.level / capability.max" [width]="500" (change)="levelChange($event)"></app-slider>
+    </div>
+    <div *ngSwitchCase="types.Hue" class="slider">
+      <label>Hue</label>
+      <app-slider [value]="capability.level / capability.max" [width]="500" (change)="levelChange($event)"></app-slider>
+    </div>
+    <div *ngSwitchCase="types.Saturation" class="slider">
+      <label>Saturation</label>
+      <app-slider [value]="capability.level / capability.max" [width]="500" (change)="levelChange($event)"></app-slider>
+    </div>
+  </div>
+</div>

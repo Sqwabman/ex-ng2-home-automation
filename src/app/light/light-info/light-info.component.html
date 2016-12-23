@@ -1,0 +1,4 @@
+<div *ngIf="light">
+  <div>{{light.name}}</div>
+  <app-light-capability *ngFor="let capability of light.capabilities" [light]="light" [capability]="capability"></app-light-capability>
+</div>
