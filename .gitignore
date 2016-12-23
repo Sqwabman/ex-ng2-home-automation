@@ -16,6 +16,10 @@
 *.launch
 .settings/
 
+#prod and dev
+/prod
+/dev
+
 # misc
 /.sass-cache
 /connect.lock

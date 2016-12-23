@@ -25,6 +25,7 @@ let light = new LightController(hue, smart);
 app.use('/api/smart', SmartThingsRouter.init(smart));
 app.use('/api/hue', PhilipsHueRouter.init(hue));
 app.use('/api/lights', LightRouter.init(light));
+app.use(express.static('client'));
 
 if (app.get('env') === 'production') {
 
