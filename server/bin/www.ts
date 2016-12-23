@@ -4,15 +4,21 @@
  * Module dependencies.
  */
 
-import { app } from '../app';
-import { serverPort } from '../config';
+import {app} from '../app';
+import {serverPort, proxyPort} from '../config';
 import * as http from 'http';
+import proxy = require("../proxy");
 
 /**
  * Get port from environment and store in Express.
  */
-const port = normalizePort(process.env.PORT || serverPort);
+const port = normalizePort(serverPort);
+console.log('Server on port', port);
 app.set('port', port);
+
+const port2 = normalizePort(proxyPort);
+console.log('Proxy on port', port2);
+proxy.listen(port2);
 
 /**
  * Create HTTP server.

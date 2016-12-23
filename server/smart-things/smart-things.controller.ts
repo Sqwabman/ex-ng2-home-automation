@@ -18,15 +18,14 @@ const ON = 'on';
 const OFF = 'off';
 
 export class SmartThingsController {
+  public static instance = new SmartThingsController();
   private config: string;
   private info: SmartThingsInfo;
   private http: Http;
 
-  public constructor(options: {
-    config?: string,
-  } = {}) {
+  private constructor() {
     this.http = new Http();
-    this.config = options.config || DEFAULT_CONFIG;
+    this.config = DEFAULT_CONFIG;
     fs.exists(this.config, (exists) => {
       if (exists) {
         console.log('Reading smartthings config', this.config);

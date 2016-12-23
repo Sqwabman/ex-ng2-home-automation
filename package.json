@@ -63,6 +63,8 @@
     "event-stream": "^3.3.4",
     "express": "^4.13.4",
     "express-jwt": "^3.3.0",
+    "http-proxy": "^1.16.2",
+    "http-proxy-middleware": "^0.17.3",
     "jsonwebtoken": "^5.7.0",
     "morgan": "^1.7.0",
     "node-uuid": "^1.4.7",

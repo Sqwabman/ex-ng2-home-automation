@@ -20,6 +20,10 @@
 /prod
 /dev
 
+#config files
+philips-hue.json
+smartthings.json
+
 # misc
 /.sass-cache
 /connect.lock

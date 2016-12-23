@@ -19,8 +19,11 @@ const MAX_SAT = 254;
 const MAX_BRI = 254;
 
 export class LightController {
+  public static instance = new LightController();
+  private hue = PhilipsHueController.instance;
+  private smart = SmartThingsController.instance;
 
-  public constructor(private hue: PhilipsHueController, private smart: SmartThingsController) {
+  private constructor() {
   }
 
   getAllLights(): Promise<Light[]> {

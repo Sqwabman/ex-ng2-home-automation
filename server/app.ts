@@ -8,6 +8,7 @@ import {SmartThingsController} from "./smart-things/smart-things.controller";
 import {LightController} from "./lights/light.controller";
 import {SmartThingsRouter} from "./routes/smart-things.router";
 import {LightRouter} from "./routes/light.router";
+let proxy = require('http-proxy-middleware');
 
 const app: express.Application = express();
 
@@ -17,21 +18,16 @@ app.use(json());
 app.use(compression());
 app.use(urlencoded({extended: true}));
 
-let hue = new PhilipsHueController();
-let smart = new SmartThingsController();
-let light = new LightController(hue, smart);
+let hue = PhilipsHueController.instance;
+let smart = SmartThingsController.instance;
+let light = LightController.instance;
 
 // api routes
 app.use('/api/smart', SmartThingsRouter.init(smart));
 app.use('/api/hue', PhilipsHueRouter.init(hue));
 app.use('/api/lights', LightRouter.init(light));
-app.use(express.static('client'));
 
-if (app.get('env') === 'production') {
-
-  // in production mode run application from dist folder
-  app.use(express.static(path.join(__dirname, '/../client')));
-}
+app.use(express.static(path.join(__dirname, '/../client')));
 
 // catch 404 and forward to error handler
 app.use(function (req: express.Request, res: express.Response, next) {

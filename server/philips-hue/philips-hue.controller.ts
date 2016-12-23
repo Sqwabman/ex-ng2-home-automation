@@ -11,15 +11,14 @@ const DEFAULT_CONFIG = 'philips-hue.json';
 const UTF8 = 'utf8';
 
 export class PhilipsHueController {
+  public static instance: PhilipsHueController = new PhilipsHueController();
   private config: string;
   private http: Http;
   private info: PhilipsHueInfo;
 
-  public constructor(options: {
-    config?: string,
-  } = {}) {
+  private constructor() {
     this.http = new Http();
-    this.config = options.config || DEFAULT_CONFIG;
+    this.config = DEFAULT_CONFIG;
     fs.exists(this.config, (exists) => {
       if (exists) {
         console.log('Reading hue config', this.config);
@@ -31,17 +30,17 @@ export class PhilipsHueController {
     });
   }
 
-  isAuthenticated(): boolean {
+  public isAuthenticated(): boolean {
     return this.info.bridges && this.info.bridges.length > 0;
   }
 
-  getHueIPs(): Promise<string[]> {
+  public getHueIPs(): Promise<string[]> {
     console.log('Get hue ips')
     return this.http.get('https://www.meethue.com/api/nupnp')
       .then(res => res.map(ip => ip.internalipaddress));
   }
 
-  authenticate(ip: string): Promise<boolean> {
+  public authenticate(ip: string): Promise<boolean> {
     return this.http.post(`http://${ip}/api`, {body: JSON.stringify({devicetype: 'HomeAutomation'})})
       .then(res => {
         console.log(res);
@@ -71,14 +70,14 @@ export class PhilipsHueController {
     return bridge;
   }
 
-  getAllLights(): Promise<HueLight[]> {
+  public getAllLights(): Promise<HueLight[]> {
     return Promise.all(this.info.bridges.map(bridge => this.getLights(bridge)))
       .then(values => {
         return [].concat.apply([], values);
       });
   }
 
-  getLights(bridge: HueBridge): Promise<HueLight[]> {
+  public getLights(bridge: HueBridge): Promise<HueLight[]> {
     console.log('Getting lights form bridge', bridge);
     return this.http.get(`http://${bridge.ip}/api/${bridge.username}/lights`)
       .then(lights => {
@@ -90,6 +89,10 @@ export class PhilipsHueController {
         }
         return lightList;
       });
+  }
+
+  public readLights(responses: HueResponse[]) {
+    console.log(responses);
   }
 
   public getLight(ip: string, username: string, id: string) {
@@ -122,35 +125,6 @@ export class PhilipsHueController {
       info: info,
     };
   }
-
-  // colorLoop(light: HueLight) {
-  //   this.setLightState(light, {
-  //     on: true,
-  //     effect: 'colorloop',
-  //     sat: 200,
-  //     bri: 254,
-  //   });
-  // }
-  //
-  // setLightHue(light: any, hue: number) {
-  //   this.setLightState(light, {
-  //     on: true,
-  //     hue: Math.floor(hue),
-  //     sat: 254
-  //   });
-  // }
-  //
-  // toggleLight(light: HueLight) {
-  //   this.setLightState(light, {
-  //     on: !light.info.state.on,
-  //   });
-  // }
-
-  // setLightState(light: HueLight, state: HueState) {
-  //   this.http.put(`http://${light.bridge.ip}/api/${light.bridge.username}/lights/${light.id}/state`, state, this.getHeaders())
-  //     .then(i => this.updateLight(light))
-  //     .catch(error => console.log(error));
-  // }
 
   private getHeaders(): any {
     return {'Content-Type': 'application/json'};
