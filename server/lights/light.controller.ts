@@ -10,6 +10,7 @@ import {LightConfiguration} from "./light-configuration.interface";
 import {HueKey} from "../philips-hue/hue-key.interface";
 import {HueState} from "../philips-hue/hue-state.interface";
 import {SmartThingsKey} from "../smart-things/smart-things-key.component";
+import Socket = SocketIO.Socket;
 
 const DIMMABLE_LIGHT = "Dimmable light";
 const EXTENDED_COLOR_LIGHT = "Extended color light";
@@ -25,8 +26,13 @@ export class LightController {
   public static instance = new LightController();
   private hue = PhilipsHueController.instance;
   private smart = SmartThingsController.instance;
+  private socket: Socket;
 
   private constructor() {
+  }
+
+  setLightSocket(socket: Socket){
+    this.socket = socket;
   }
 
   getAllLights(): Promise<Light[]> {
