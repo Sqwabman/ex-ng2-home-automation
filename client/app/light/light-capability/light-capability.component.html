@@ -1,7 +1,12 @@
 <div *ngIf="capability">
-  <div [ngSwitch]="capability.type" class="slider">
-    <div *ngSwitchCase="types.On_Off" class="slider">
-      <button (click)="stateClick()">{{capability.state ? 'On' : 'Off'}}</button>
+  <div [ngSwitch]="capability.type">
+    <div class="buttons">
+      <button *ngSwitchCase="types.On_Off" (click)="stateClick()">
+        {{capability.state ? 'On' : 'Off'}}
+      </button>
+      <button *ngSwitchCase="types.ColorLoop" (click)="stateClick()">
+        {{capability.state ? 'Off' : 'Color Loop'}}
+      </button>
     </div>
     <div *ngSwitchCase="types.Brightness" class="slider">
       <label>Brightness</label>

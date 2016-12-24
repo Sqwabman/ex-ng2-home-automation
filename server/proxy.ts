@@ -1,7 +1,6 @@
 import {PhilipsHueController} from "./philips-hue/philips-hue.controller";
 let http = require('http');
 let httpProxy = require('http-proxy');
-let replaceStream = require('replacestream');
 
 let hue = PhilipsHueController.instance;
 

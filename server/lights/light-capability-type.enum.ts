@@ -1,3 +1,3 @@
 export enum LightCapabilityType{
-  On_Off, Brightness, Saturation, Hue
+  On_Off, ColorLoop, Brightness, Hue, Saturation
 }

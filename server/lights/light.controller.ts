@@ -14,6 +14,9 @@ import {SmartThingsKey} from "../smart-things/smart-things-key.component";
 const DIMMABLE_LIGHT = "Dimmable light";
 const EXTENDED_COLOR_LIGHT = "Extended color light";
 
+const COLOR_LOOP = 'colorloop';
+const NONE = 'none';
+
 const MAX_HUE = 65535;
 const MAX_SAT = 254;
 const MAX_BRI = 254;
@@ -78,9 +81,15 @@ export class LightController {
         max: MAX_SAT,
         type: LightCapabilityType.Saturation,
       });
+      capabilities.push({
+        state: hue.info.state.effect === COLOR_LOOP,
+        type: LightCapabilityType.ColorLoop,
+      });
     }
 
-    return capabilities;
+    return capabilities.sort((a: LightCapability, b: LightCapability) => {
+      return a.type < b.type ? -1 : 1;
+    });
   }
 
   private createLightFromSmartSwitch(swi: SmartThingsSwitch): Light {
@@ -106,6 +115,9 @@ export class LightController {
           break;
         case LightCapabilityType.Saturation:
           state.sat = capability.level;
+          break;
+        case LightCapabilityType.ColorLoop:
+          state.effect = capability.state ? COLOR_LOOP : NONE;
           break;
       }
     }
