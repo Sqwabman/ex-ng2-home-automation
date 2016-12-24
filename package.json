@@ -69,12 +69,15 @@
     "morgan": "^1.7.0",
     "node-uuid": "^1.4.7",
     "normalize.css": "^5.0.0",
+    "replacestream": "^4.0.2",
     "request": "^2.79.0",
     "rxjs": "5.0.0-beta.12",
     "ts-helpers": "^1.1.1",
     "ts-node": "1.2.1",
     "tslint": "3.13.0",
     "typescript": "~2.0.3",
+    "xml-nodes": "^0.1.5",
+    "xml-objects": "^1.0.1",
     "zone.js": "^0.6.23"
   },
   "devDependencies": {

@@ -1,13 +1,14 @@
 import {PhilipsHueController} from "./philips-hue/philips-hue.controller";
 let http = require('http');
 let httpProxy = require('http-proxy');
+let replaceStream = require('replacestream');
 
 let hue = PhilipsHueController.instance;
 
 //
 // Create your proxy server and set the target in the options.
 //
-const proxy = httpProxy.createProxyServer({target: 'http://192.168.1.50'});
+const proxy = httpProxy.createProxyServer({target: 'http://192.168.1.51'});
 
 //
 // Listen for the `error` event on `proxy`.
@@ -23,13 +24,17 @@ proxy.on('error', function (err, req, res) {
 // Listen for the `proxyRes` event on `proxy`.
 //
 proxy.on('proxyRes', (proxyRes, req, res) => {
-  if(proxyRes.headers['content-type'] === 'application/json') {
+  let xml = proxyRes.headers['content-type'] ==='text/xml';
+  let json = proxyRes.headers['content-type'] === 'application/json';
+
+  if(json) {
     let buffer = '';
     proxyRes.on('data', (data) => {
       buffer += data;
     })
       .on('end', () => {
-        hue.readLights(JSON.parse(buffer));
+        console.log(buffer);
+        //hue.readLights(JSON.parse(buffer));
       });
   }
 });
