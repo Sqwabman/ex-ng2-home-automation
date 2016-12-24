@@ -3,7 +3,7 @@ import * as io from 'socket.io-client';
 import {Injectable} from "@angular/core";
 
 @Injectable()
-export class LightSocketService {
+export class DeviceSocketService {
   private url = 'http://localhost:5000';
   private socket;
 

@@ -3,21 +3,21 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-import { LightListComponent } from './light-list.component';
+import { DeviceCapabilityComponent } from './device-capability.component';
 
-describe('LightListComponent', () => {
-  let component: LightListComponent;
-  let fixture: ComponentFixture<LightListComponent>;
+describe('DeviceCapabilityComponent', () => {
+  let component: DeviceCapabilityComponent;
+  let fixture: ComponentFixture<DeviceCapabilityComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LightListComponent ]
+      declarations: [ DeviceCapabilityComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(LightListComponent);
+    fixture = TestBed.createComponent(DeviceCapabilityComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -5,10 +5,10 @@ import {HttpModule} from '@angular/http';
 import {AppComponent} from './app.component';
 import {AppRoutingModule} from "./app-routing.module";
 import {SliderModule} from "./slider/slider.module";
-import {LightModule} from "./light/light.module";
-import {LightService} from "./services/light.service";
-import {LightListResolve} from "./services/light-list.resolve";
-import {LightSocketService} from "./services/light-socket.service";
+import {DeviceModule} from "./device/device.module";
+import {DeviceService} from "./services/device.service";
+import {DeviceListResolve} from "./services/device-list.resolve";
+import {DeviceSocketService} from "./services/device-socket.service";
 
 @NgModule({
   imports: [
@@ -17,15 +17,15 @@ import {LightSocketService} from "./services/light-socket.service";
     HttpModule,
     AppRoutingModule,
     SliderModule,
-    LightModule,
+    DeviceModule,
   ],
   declarations: [
     AppComponent,
   ],
   providers: [
-    LightService,
-    LightListResolve,
-    LightSocketService,
+    DeviceService,
+    DeviceListResolve,
+    DeviceSocketService,
   ],
   bootstrap: [AppComponent]
 })

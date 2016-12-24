@@ -1,0 +1,4 @@
+<div *ngIf="device">
+  <div>{{device.name}}</div>
+  <app-device-capability *ngFor="let capability of device.capabilities" [device]="device" [capability]="capability"></app-device-capability>
+</div>

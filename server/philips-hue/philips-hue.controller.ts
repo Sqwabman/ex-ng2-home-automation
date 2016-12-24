@@ -5,7 +5,7 @@ import {HueResponse} from "./hue-response.interface";
 import {HueBridge} from "./hue-bridge.interface";
 import {isUndefined} from "util";
 import {HueLight} from "./hue-light.interface";
-import {LightType} from "../lights/light-type.enum";
+import {DeviceType} from "../../common/device-type.enum";
 
 const DEFAULT_CONFIG = 'philips-hue.json';
 const UTF8 = 'utf8';
@@ -30,16 +30,29 @@ export class PhilipsHueController {
     });
   }
 
+  /**
+   * Checks to see if the bridge is authenticate.
+   * @returns {boolean}
+   */
   public isAuthenticated(): boolean {
     return this.info.bridges && this.info.bridges.length > 0;
   }
 
+  /**
+   * Gets a list of possible hue bridge ips
+   * @returns {Promise<TResult>}
+   */
   public getHueIPs(): Promise<string[]> {
     console.log('Get hue ips')
     return this.http.get('https://www.meethue.com/api/nupnp')
       .then(res => res.map(ip => ip.internalipaddress));
   }
 
+  /**
+   * Tries to authenticate with the provided bridge ip
+   * @param ip
+   * @returns {Promise<TResult>}
+   */
   public authenticate(ip: string): Promise<boolean> {
     return this.http.post(`http://${ip}/api`, {body: JSON.stringify({devicetype: 'HomeAutomation'})})
       .then(res => {
@@ -53,6 +66,12 @@ export class PhilipsHueController {
       .then((bridge) => this.getLights(bridge));
   }
 
+  /**
+   * Creates a new bridge and saves it to the config
+   * @param ip
+   * @param res
+   * @returns {{ip: string, username: string}}
+   */
   private createBridge(ip: string, res: HueResponse[]): HueBridge {
     let response = res[0];
 
@@ -70,6 +89,10 @@ export class PhilipsHueController {
     return bridge;
   }
 
+  /**
+   * Gets all lights from all bridges
+   * @returns {Promise<TResult>}
+   */
   public getAllLights(): Promise<HueLight[]> {
     return Promise.all(this.info.bridges.map(bridge => this.getLights(bridge)))
       .then(values => {
@@ -77,6 +100,11 @@ export class PhilipsHueController {
       });
   }
 
+  /**
+   * Gets all lights from a given bridge
+   * @param bridge
+   * @returns {Promise<HueLight[]>}
+   */
   public getLights(bridge: HueBridge): Promise<HueLight[]> {
     console.log('Getting lights form bridge', bridge);
     return this.http.get(`http://${bridge.ip}/api/${bridge.username}/lights`)
@@ -84,19 +112,22 @@ export class PhilipsHueController {
         let lightList: HueLight[] = [];
         for (let propIndex in lights) {
           if (propIndex) {
-            lightList.push(this.createLight(propIndex, bridge, lights[propIndex]));
+            lightList.push(this.createLight(bridge, propIndex, lights[propIndex]));
           }
         }
         return lightList;
       });
   }
 
-  public readLights(responses: HueResponse[]) {
-    console.log(responses);
-  }
-
-  public getLight(ip: string, username: string, id: string) {
-    let light = this.createLight(id, {ip: ip, username: username});
+  /**
+   * Gets the information for a given light
+   * @param ip
+   * @param username
+   * @param id
+   * @returns {Promise<HueLight>}
+   */
+  public getLight(bridge: HueBridge, id: string) {
+    let light = this.createLight(bridge, id);
     console.log('Getting lights', light);
     return this.http.get(this.lightUri(light))
       .then(info => {
@@ -106,7 +137,7 @@ export class PhilipsHueController {
   }
 
   public setLightState(bridge: HueBridge, id: string, state: any): Promise<boolean> {
-    let light = this.createLight(id, bridge);
+    let light = this.createLight(bridge, id);
 
     console.log('Setting light state', light, state);
     return this.http.put(`${this.lightUri(light)}/state`, {body: JSON.stringify(state)})
@@ -115,11 +146,11 @@ export class PhilipsHueController {
       });
   }
 
-  public createLight(id: string, bridge: HueBridge, info?: any): HueLight {
+  public createLight(bridge: HueBridge, id: string, info?: any): HueLight {
     return {
       key: {
         id: id,
-        type: LightType.Hue,
+        type: DeviceType.Hue,
         bridge: bridge,
       },
       info: info,

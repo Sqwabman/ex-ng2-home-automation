@@ -50,7 +50,7 @@ export class PhilipsHueRouter {
      * GET light status
      */
     philipsHueRouter.get('/lights/:ip/:username/:id', (req: Request, res: Response, next: NextFunction) => {
-      philipsHue.getLight(req.params.ip, req.params.username, req.params.id)
+      philipsHue.getLight({ip: req.params.ip, username: req.params.username}, req.params.id)
         .then(lights => res.json(lights))
         .catch(error => {
           res.statusCode = 400;

@@ -7,7 +7,7 @@ import {SmartThingsSwitch} from "../../../../server/smart-things/smart-things-sw
   styleUrls: ['./smart-things-switch.component.css']
 })
 export class SmartThingsSwitchComponent implements OnInit {
-  @Input() lightSwitch: SmartThingsSwitch;
+  @Input() deviceSwitch: SmartThingsSwitch;
 
   constructor() { }
 
