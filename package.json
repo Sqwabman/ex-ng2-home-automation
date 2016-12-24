@@ -6,7 +6,8 @@
   "license": "MIT",
   "angular-cli": {},
   "scripts": {
-    "start": "concurrently --kill-others \"npm run client:serve\" \"npm run server:watch\"",
+    "dev:run": "",
+    "dev:debug": "concurrently --kill-others \"npm run client:serve\" \"npm run server:watch\"",
     "prod:build": "npm run server:prod && npm run client:prod",
     "prod:run": "node ./prod/server/bin/www.js",
     "client:prod": "ng build --prod --output-path=prod/client",

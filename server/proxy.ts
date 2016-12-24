@@ -8,7 +8,11 @@ let hue = PhilipsHueController.instance;
 //
 // Create your proxy server and set the target in the options.
 //
-const proxy = httpProxy.createProxyServer({target: 'http://192.168.1.51'});
+const proxy = httpProxy.createProxyServer();
+
+http.createServer((req, res) => {
+  proxy.web(req,res, {target: 'http://192.168.1.50/'})
+});
 
 //
 // Listen for the `error` event on `proxy`.
