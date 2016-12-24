@@ -8,6 +8,7 @@ import {SliderModule} from "./slider/slider.module";
 import {LightModule} from "./light/light.module";
 import {LightService} from "./services/light.service";
 import {LightListResolve} from "./services/light-list.resolve";
+import {LightSocketService} from "./services/light-socket.service";
 
 @NgModule({
   imports: [
@@ -24,6 +25,7 @@ import {LightListResolve} from "./services/light-list.resolve";
   providers: [
     LightService,
     LightListResolve,
+    LightSocketService,
   ],
   bootstrap: [AppComponent]
 })
