@@ -1,14 +1,21 @@
-.component{
+.slider{
   height: 20px;
+  background-color: black;
 }
 
 .holder{
   height: 100%;
-  background-color: black;
+}
+
+.location{
+  position: relative;
+  height: 100%;
 }
 
 .indicator{
-  height: 100%;
   position: relative;
+  height: 100%;
   background-color: green;
 }
+
+

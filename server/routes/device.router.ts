@@ -11,7 +11,7 @@ export class DeviceRouter {
      * GET a list of all lights
      */
     deviceRouter.get('/', (req: Request, res: Response, next: NextFunction) => {
-      lights.getAllLights()
+      lights.getAllDevices()
         .then(lights => res.json(lights))
         .catch(error => {
           res.statusCode = 400;

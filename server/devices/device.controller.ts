@@ -31,11 +31,11 @@ export class DeviceController {
   private constructor() {
   }
 
-  setLightSocket(socket: Socket){
+  setLightSocket(socket: Socket) {
     this.socket = socket;
   }
 
-  getAllLights(): Promise<Device[]> {
+  getAllDevices(): Promise<Device[]> {
     return Promise.all([
       this.hue.getAllLights()
         .then(hues => hues.map(hue => this.createLightFromHue(hue))),

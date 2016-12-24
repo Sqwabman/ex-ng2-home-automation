@@ -1,27 +1,52 @@
 <div *ngIf="capability">
   <div [ngSwitch]="capability.type">
     <div class="buttons">
-      <button *ngSwitchCase="types.On_Off" (click)="stateClick()">
-        {{capability.state ? 'On' : 'Off'}}
-      </button>
-      <button *ngSwitchCase="types.ColorLoop" (click)="stateClick()">
-        {{capability.state ? 'Off' : 'Color Loop'}}
-      </button>
+      <div *ngSwitchCase="types.On_Off">
+        <button (click)="stateClick(true)"
+                class="btn"
+                [class.btn-primary]="capability.state"
+                [class.btn-default]="!capability.state">
+          On
+        </button>
+        <button (click)="stateClick(false)"
+                class="btn"
+                [class.btn-primary]="!capability.state"
+                [class.btn-default]="capability.state">
+          Off
+        </button>
+      </div>
+      <div *ngSwitchCase="types.ColorLoop">
+        <button (click)="stateClick(true)"
+                class="btn"
+                [class.btn-primary]="capability.state"
+                [class.btn-default]="!capability.state">
+          ColorLoop
+        </button>
+        <button (click)="stateClick(false)"
+                class="btn"
+                [class.btn-primary]="!capability.state"
+                [class.btn-default]="capability.state">
+          Off
+        </button>
+      </div>
     </div>
     <div *ngSwitchCase="types.Brightness" class="slider">
       <label>Brightness</label>
       <app-slider [value]="capability.level / capability.max"
-                  [width]="500"
                   (change)="levelChange($event)"
-                  class="red"></app-slider>
+                  class="brightness"></app-slider>
     </div>
     <div *ngSwitchCase="types.Hue" class="slider">
       <label>Hue</label>
-      <app-slider [value]="capability.level / capability.max" [width]="500" (change)="levelChange($event)"></app-slider>
+      <app-slider [value]="capability.level / capability.max"
+                  (change)="levelChange($event)"
+                  class="hue"></app-slider>
     </div>
     <div *ngSwitchCase="types.Saturation" class="slider">
       <label>Saturation</label>
-      <app-slider [value]="capability.level / capability.max" [width]="500" (change)="levelChange($event)"></app-slider>
+      <app-slider [value]="capability.level / capability.max"
+                  (change)="levelChange($event)"
+                  class="saturation"></app-slider>
     </div>
   </div>
 </div>

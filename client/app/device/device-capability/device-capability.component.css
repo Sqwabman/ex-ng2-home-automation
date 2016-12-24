@@ -2,6 +2,36 @@
   margin-top: 15px;
 }
 
-.red{
-  background-color: red;
+app-slider /deep/ .slider {
+  border: solid black 1px;
 }
+
+.brightness /deep/ .slider {
+  background: gray; /* For browsers that do not support gradients */
+  background: -webkit-linear-gradient(right, white, black); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(left, white, black); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(left, white, black); /* For Firefox 3.6 to 15 */
+  background: linear-gradient(to left, white, black); /* Standard syntax */
+}
+
+.hue /deep/ .slider {
+  background: red; /* For browsers that do not support gradients */
+  background: -webkit-linear-gradient(left, red, orange, yellow, green, blue, indigo, violet, red); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(left, red, orange, yellow, green, blue, indigo, violet, red); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(left, red, orange, yellow, green, blue, indigo, violet, red); /* For Fx 3.6 to 15 */
+  background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet, red); /* Standard syntax */
+}
+
+.saturation /deep/ .slider {
+  background: gray; /* For browsers that do not support gradients */
+  background: -webkit-linear-gradient(left, white, black); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(right, white, black); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(right, white, black); /* For Firefox 3.6 to 15 */
+  background: linear-gradient(to right, white, black); /* Standard syntax */
+}
+
+app-slider /deep/ .indicator {
+  border: solid black 1px;
+  background-color: gray;
+}
+

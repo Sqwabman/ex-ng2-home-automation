@@ -1,4 +1,7 @@
-import {Component, OnInit, ElementRef, Input, HostListener, Output, EventEmitter} from '@angular/core';
+import {
+  Component, OnInit, ElementRef, Input, HostListener, Output, EventEmitter, HostBinding,
+  ViewEncapsulation
+} from '@angular/core';
 
 export interface SliderValue {
   fraction: number;
@@ -11,15 +14,11 @@ export interface SliderValue {
 })
 export class SliderComponent implements OnInit {
   @Input() value: number;
-  @Input('width') inputWidth: number;
   @Output() change = new EventEmitter<number>();
   dragX: number;
 
   sliderWidth = 10;
-
-  get width(): number {
-    return this.inputWidth - this.sliderWidth || 500;
-  }
+  sliderPositions = 40;
 
   constructor(private elementRef: ElementRef) {
   }
@@ -32,13 +31,13 @@ export class SliderComponent implements OnInit {
 
   @HostListener('document:mouseup', ['$event'])
   onMouseUp(event) {
-    if(this.dragX){
+    if (this.dragX) {
       this.change.emit(this.value);
     }
     this.dragX = null;
   }
 
-  onBackgroundMouseDown(event: MouseEvent){
+  onBackgroundMouseDown(event: MouseEvent) {
     this.dragX = this.sliderWidth / 2;
     this.onMouseMove(event);
   }
@@ -52,13 +51,15 @@ export class SliderComponent implements OnInit {
   onMouseMove(event: MouseEvent) {
     if (this.dragX) {
       event.preventDefault();
-      this.value = Math.min(Math.max(((event.clientX - this.elementRef.nativeElement.offsetLeft) - this.dragX), 0), this.width) / (this.width);
-
+      let percent = (event.clientX - this.elementRef.nativeElement.offsetLeft) / this.elementRef.nativeElement.parentNode.offsetWidth;
+      let positions = Math.round(100 / this.sliderPositions);
+      percent = Math.round((percent * 100) / positions) * positions / 100;
+      this.value = Math.min(Math.max(percent, 0), 1);
     }
   }
 
   get position(): number {
-    return this.width * this.value;
+    return Math.round(this.value * 100);
   }
 
 }

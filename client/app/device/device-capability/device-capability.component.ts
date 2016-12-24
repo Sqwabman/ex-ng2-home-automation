@@ -21,8 +21,8 @@ export class DeviceCapabilityComponent implements OnInit {
   ngOnInit() {
   }
 
-  stateClick() {
-    this.capability.state = !this.capability.state;
+  stateClick(state: boolean) {
+    this.capability.state = state;
     this.deviceService.setCapabilities(this.device, [this.capability])
   }
 

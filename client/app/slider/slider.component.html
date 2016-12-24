@@ -1,10 +1,15 @@
-<div class="component">
+<div class="slider"
+     (mousedown)="onBackgroundMouseDown($event)"
+     [style.padding-right.px]="sliderWidth / 2"
+     [style.padding-left.px]="sliderWidth / 2">
   <div [style.width.px]="width + sliderWidth"
-       (mousedown)="onBackgroundMouseDown($event)"
        class="holder">
     <div (mousedown)="onMouseDown($event)"
-         [style.left.px]="position"
-         [style.width.px]="sliderWidth"
-         class="indicator"></div>
+         [style.left.%]="position"
+         class="location">
+      <div [style.width.px]="sliderWidth"
+           [style.left.px]="(sliderWidth / 2) * -1"
+           class="indicator"></div>
+    </div>
   </div>
 </div>
