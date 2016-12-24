@@ -5,10 +5,9 @@ import * as compression from 'compression';
 import {PhilipsHueRouter} from "./routes/philips-hue.router";
 import {PhilipsHueController} from "./philips-hue/philips-hue.controller";
 import {SmartThingsController} from "./smart-things/smart-things.controller";
-import {LightController} from "./lights/light.controller";
 import {SmartThingsRouter} from "./routes/smart-things.router";
-import {LightRouter} from "./routes/light.router";
-let proxy = require('http-proxy-middleware');
+import {DeviceRouter} from "./routes/device.router";
+import {DeviceController} from "./devices/device.controller";
 
 const app: express.Application = express();
 
@@ -20,12 +19,12 @@ app.use(urlencoded({extended: true}));
 
 let hue = PhilipsHueController.instance;
 let smart = SmartThingsController.instance;
-let light = LightController.instance;
+let light = DeviceController.instance;
 
 // api routes
 app.use('/api/smart', SmartThingsRouter.init(smart));
 app.use('/api/hue', PhilipsHueRouter.init(hue));
-app.use('/api/lights', LightRouter.init(light));
+app.use('/api/lights', DeviceRouter.init(light));
 
 app.use(express.static(path.join(__dirname, '/../client')));
 

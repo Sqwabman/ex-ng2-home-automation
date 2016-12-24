@@ -1,10 +1,10 @@
 import {Resolve, ActivatedRouteSnapshot, RouterStateSnapshot} from "@angular/router";
-import {Light} from "../../../server/lights/light.interface";
 import {LightService} from "./light.service";
 import {Injectable} from "@angular/core";
+import {Device} from "../../../common/device.interface";
 
 @Injectable()
-export class LightListResolve implements Resolve<Light[]>{
+export class LightListResolve implements Resolve<Device[]>{
 
   constructor(private lightService: LightService){}
 

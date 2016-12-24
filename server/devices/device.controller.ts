@@ -1,12 +1,12 @@
 import {PhilipsHueController} from "../philips-hue/philips-hue.controller";
 import {SmartThingsController} from "../smart-things/smart-things.controller";
-import {Light} from "./light.interface";
+import {Device} from "../../common/device.interface";
 import {HueLight} from "../philips-hue/hue-light.interface";
-import {LightCapabilityType} from "./light-capability-type.enum";
-import {LightCapability} from "./light-capability.interface";
+import {DeviceCapabilityType} from "../../common/device-capability-type.enum";
+import {DeviceCapability} from "../../common/device-capability.interface";
 import {SmartThingsSwitch} from "../smart-things/smart-things-switch.interface";
-import {LightType} from "./light-type.enum";
-import {LightConfiguration} from "./light-configuration.interface";
+import {DeviceType} from "../../common/device-type.enum";
+import {DeviceConfiguration} from "../../common/device-configuration.interface";
 import {HueKey} from "../philips-hue/hue-key.interface";
 import {HueState} from "../philips-hue/hue-state.interface";
 import {SmartThingsKey} from "../smart-things/smart-things-key.component";
@@ -22,8 +22,8 @@ const MAX_HUE = 65535;
 const MAX_SAT = 254;
 const MAX_BRI = 254;
 
-export class LightController {
-  public static instance = new LightController();
+export class DeviceController {
+  public static instance = new DeviceController();
   private hue = PhilipsHueController.instance;
   private smart = SmartThingsController.instance;
   private socket: Socket;
@@ -35,7 +35,7 @@ export class LightController {
     this.socket = socket;
   }
 
-  getAllLights(): Promise<Light[]> {
+  getAllLights(): Promise<Device[]> {
     return Promise.all([
       this.hue.getAllLights()
         .then(hues => hues.map(hue => this.createLightFromHue(hue))),
@@ -45,17 +45,17 @@ export class LightController {
       .then(values => [].concat.apply([], values));
   }
 
-  setCapability(config: LightConfiguration): Promise<any> {
+  setCapability(config: DeviceConfiguration): Promise<any> {
     switch (config.key.type) {
-      case LightType.Smart:
+      case DeviceType.Smart:
         return this.smart.changeSwitchState((config.key as SmartThingsKey).id, this.getSmartThingsSwitchState(config.capabilities));
-      case LightType.Hue:
+      case DeviceType.Hue:
         let key = (config.key as HueKey);
         return this.hue.setLightState(key.bridge, key.id, this.createHueState(config.capabilities));
     }
   }
 
-  private createLightFromHue(hue: HueLight): Light {
+  private createLightFromHue(hue: HueLight): Device {
     return {
       key: hue.key,
       name: hue.info.name,
@@ -63,16 +63,16 @@ export class LightController {
     };
   }
 
-  private createHueCapabilityList(hue: HueLight): LightCapability[] {
-    let capabilities: LightCapability[] = [
+  private createHueCapabilityList(hue: HueLight): DeviceCapability[] {
+    let capabilities: DeviceCapability[] = [
       {
         state: hue.info.state.on,
-        type: LightCapabilityType.On_Off,
+        type: DeviceCapabilityType.On_Off,
       },
       {
         level: hue.info.state.bri,
         max: MAX_BRI,
-        type: LightCapabilityType.Brightness,
+        type: DeviceCapabilityType.Brightness,
       }
     ];
 
@@ -80,49 +80,49 @@ export class LightController {
       capabilities.push({
         level: hue.info.state.hue,
         max: MAX_HUE,
-        type: LightCapabilityType.Hue,
+        type: DeviceCapabilityType.Hue,
       });
       capabilities.push({
         level: hue.info.state.sat,
         max: MAX_SAT,
-        type: LightCapabilityType.Saturation,
+        type: DeviceCapabilityType.Saturation,
       });
       capabilities.push({
         state: hue.info.state.effect === COLOR_LOOP,
-        type: LightCapabilityType.ColorLoop,
+        type: DeviceCapabilityType.ColorLoop,
       });
     }
 
-    return capabilities.sort((a: LightCapability, b: LightCapability) => {
+    return capabilities.sort((a: DeviceCapability, b: DeviceCapability) => {
       return a.type < b.type ? -1 : 1;
     });
   }
 
-  private createLightFromSmartSwitch(swi: SmartThingsSwitch): Light {
+  private createLightFromSmartSwitch(swi: SmartThingsSwitch): Device {
     return {
-      key: {id: swi.id, type: LightType.Smart} as SmartThingsKey,
+      key: {id: swi.id, type: DeviceType.Smart} as SmartThingsKey,
       name: swi.name,
-      capabilities: [{state: swi.on, type: LightCapabilityType.On_Off}],
+      capabilities: [{state: swi.on, type: DeviceCapabilityType.On_Off}],
     };
   }
 
-  private createHueState(capabilities: LightCapability[]): HueState {
+  private createHueState(capabilities: DeviceCapability[]): HueState {
     let state = {} as HueState;
     for (let capability of capabilities) {
       switch (capability.type) {
-        case LightCapabilityType.On_Off:
+        case DeviceCapabilityType.On_Off:
           state.on = capability.state;
           break;
-        case LightCapabilityType.Brightness:
+        case DeviceCapabilityType.Brightness:
           state.bri = capability.level;
           break;
-        case LightCapabilityType.Hue:
+        case DeviceCapabilityType.Hue:
           state.hue = capability.level;
           break;
-        case LightCapabilityType.Saturation:
+        case DeviceCapabilityType.Saturation:
           state.sat = capability.level;
           break;
-        case LightCapabilityType.ColorLoop:
+        case DeviceCapabilityType.ColorLoop:
           state.effect = capability.state ? COLOR_LOOP : NONE;
           break;
       }
@@ -130,8 +130,8 @@ export class LightController {
     return state;
   }
 
-  private getSmartThingsSwitchState(capabilities: LightCapability[]) {
-    let onOff = capabilities.find(i => i.type === LightCapabilityType.On_Off);
+  private getSmartThingsSwitchState(capabilities: DeviceCapability[]) {
+    let onOff = capabilities.find(i => i.type === DeviceCapabilityType.On_Off);
 
     if (onOff)
       return onOff.state;
