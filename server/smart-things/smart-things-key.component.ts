@@ -1,4 +1,4 @@
-import {DeviceKey} from "../../common/device-key.interface";
+import {DeviceKey} from "../devices/device-key.interface";
 export interface SmartThingsKey extends DeviceKey{
   id: string;
 }

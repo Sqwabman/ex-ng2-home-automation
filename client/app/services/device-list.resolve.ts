@@ -1,7 +1,7 @@
 import {Resolve, ActivatedRouteSnapshot, RouterStateSnapshot} from "@angular/router";
 import {DeviceService} from "./device.service";
 import {Injectable} from "@angular/core";
-import {Device} from "../../../common/device.interface";
+import {Device} from "../../../server/devices/device.interface";
 
 @Injectable()
 export class DeviceListResolve implements Resolve<Device[]>{

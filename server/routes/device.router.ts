@@ -1,6 +1,6 @@
 import {Router, Request, Response, NextFunction} from 'express';
 import {DeviceController} from "../devices/device.controller";
-import {DeviceConfiguration} from "../../common/device-configuration.interface";
+import {DeviceConfiguration} from "../devices/device-configuration.interface";
 
 export class DeviceRouter {
 

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {DeviceSocketService} from "../../services/device-socket.service";
-import {Device} from "../../../../common/device.interface";
+import {Device} from "../../../../server/devices/device.interface";
 
 @Component({
   templateUrl: './device-list.component.html',

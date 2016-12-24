@@ -5,7 +5,7 @@ import {HueResponse} from "./hue-response.interface";
 import {HueBridge} from "./hue-bridge.interface";
 import {isUndefined} from "util";
 import {HueLight} from "./hue-light.interface";
-import {DeviceType} from "../../common/device-type.enum";
+import {DeviceType} from "../devices/device-type.enum";
 
 const DEFAULT_CONFIG = 'philips-hue.json';
 const UTF8 = 'utf8';

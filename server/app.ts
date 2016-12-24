@@ -24,7 +24,7 @@ let light = DeviceController.instance;
 // api routes
 app.use('/api/smart', SmartThingsRouter.init(smart));
 app.use('/api/hue', PhilipsHueRouter.init(hue));
-app.use('/api/lights', DeviceRouter.init(light));
+app.use('/api/devices', DeviceRouter.init(light));
 
 app.use(express.static(path.join(__dirname, '/../client')));
 

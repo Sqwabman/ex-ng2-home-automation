@@ -10,7 +10,10 @@
     </div>
     <div *ngSwitchCase="types.Brightness" class="slider">
       <label>Brightness</label>
-      <app-slider [value]="capability.level / capability.max" [width]="500" (change)="levelChange($event)"></app-slider>
+      <app-slider [value]="capability.level / capability.max"
+                  [width]="500"
+                  (change)="levelChange($event)"
+                  class="red"></app-slider>
     </div>
     <div *ngSwitchCase="types.Hue" class="slider">
       <label>Hue</label>

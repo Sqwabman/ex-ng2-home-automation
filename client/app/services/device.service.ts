@@ -1,9 +1,9 @@
 import {Http} from "@angular/http";
 import {Injectable} from "@angular/core";
 import '../rxjs-extensions';
-import {DeviceConfiguration} from "../../../common/device-configuration.interface";
-import {Device} from "../../../common/device.interface";
-import {DeviceCapability} from "../../../common/device-capability.interface";
+import {DeviceConfiguration} from "../../../server/devices/device-configuration.interface";
+import {Device} from "../../../server/devices/device.interface";
+import {DeviceCapability} from "../../../server/devices/device-capability.interface";
 
 @Injectable()
 export class DeviceService {

@@ -1,8 +1,8 @@
 import {Component, OnInit, Input} from '@angular/core';
 import {DeviceService} from "../../services/device.service";
-import {Device} from "../../../../common/device.interface";
-import {DeviceCapability} from "../../../../common/device-capability.interface";
-import {DeviceCapabilityType} from "../../../../common/device-capability-type.enum";
+import {Device} from "../../../../server/devices/device.interface";
+import {DeviceCapability} from "../../../../server/devices/device-capability.interface";
+import {DeviceCapabilityType} from "../../../../server/devices/device-capability-type.enum";
 
 @Component({
   selector: 'app-device-capability',
