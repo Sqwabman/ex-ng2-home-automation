@@ -17,13 +17,13 @@ const port = normalizePort(serverPort);
 // console.log('Server on port', port);
 app.set('port', port);
 
-const port2 = normalizePort(proxyPort);
-console.log('Proxy on port', port2);
-proxy.listen(port2);
-
-const port3 = normalizePort(socketPort);
-console.log('Socket on port', port3);
-io.listen(port3);
+// const port2 = normalizePort(proxyPort);
+// console.log('Proxy on port', port2);
+// proxy.listen(port2);
+//
+// const port3 = normalizePort(socketPort);
+// console.log('Socket on port', port3);
+// io.listen(port3);
 
 /**
  * Create HTTP server.
