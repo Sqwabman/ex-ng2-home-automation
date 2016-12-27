@@ -94,10 +94,14 @@ export class PhilipsHueController {
    * @returns {Promise<TResult>}
    */
   public getAllLights(): Promise<HueLight[]> {
-    return Promise.all(this.info.bridges.map(bridge => this.getLights(bridge)))
-      .then(values => {
-        return [].concat.apply([], values);
-      });
+    if(this.info) {
+      return Promise.all(this.info.bridges.map(bridge => this.getLights(bridge)))
+        .then(values => {
+          return [].concat.apply([], values);
+        });
+    }
+
+    return Promise.resolve([]);
   }
 
   /**

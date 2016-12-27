@@ -73,7 +73,11 @@ export class SmartThingsController {
   }
 
   public getSwitches(): Promise<SmartThingsSwitch[]> {
-    return this.http.get(`${this.info.endpoints[0].uri}/switches`, this.getHeader());
+    if(this.info && this.info.endpoints && this.info.endpoints.length > 0) {
+      return this.http.get(`${this.info.endpoints[0].uri}/switches`, this.getHeader());
+    }
+
+    return Promise.resolve([]);
   }
 
   public changeSwitchState(id: string, state: boolean): Promise<boolean> {
