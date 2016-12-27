@@ -1,8 +1,8 @@
 import {Injectable, Inject} from '@angular/core';
 import {Http} from "@angular/http";
 import {ActivatedRoute} from "@angular/router";
-import {SmartThingsSwitch} from "../../../../server/smart-things/smart-things-switch.interface";
-import {AUTH_URL, CLIENT_ID} from "../../../../server/smart-things/smart-things.constants";
+import {SmartThingsSwitch} from "../../../server/smart-things/smart-things-switch.interface";
+import {AUTH_URL, CLIENT_ID} from "../../../server/smart-things/smart-things.constants";
 import {DOCUMENT} from "@angular/platform-browser";
 
 const CALLBACK_URL = encodeURIComponent('http://localhost:4200/smart/auth');
@@ -11,7 +11,6 @@ const SMART_API = 'api/smart';
 
 @Injectable()
 export class SmartThingsService {
-  callback: string;
 
   constructor(private http: Http, private route: ActivatedRoute, @Inject(DOCUMENT) private document) {
   }
@@ -23,13 +22,12 @@ export class SmartThingsService {
   }
 
   authenticateLink(): string {
-    this.callback = document.location.protocol + '//' + document.location.hostname + (document.location.port === '80' ? '' : ':' + document.location.port) + '/smart/auth';
-    return `${AUTH_URL}?response_type=code&client_id=${CLIENT_ID}&scope=app&redirect_uri=${this.callback}`;
+    return `${AUTH_URL}?response_type=code&client_id=${CLIENT_ID}&scope=app&redirect_uri=${this.getCallback()}`;
   }
 
   authenticate(code: string): Promise<boolean> {
     console.debug('Code', code);
-    return this.http.get(`${SMART_API}/token/${code}/${this.callback}`)
+    return this.http.get(`${SMART_API}/token/${code}/${this.getCallback()}`)
       .toPromise();
   }
 
@@ -37,6 +35,10 @@ export class SmartThingsService {
     return this.http.get(`${SMART_API}/smart/`)
       .toPromise()
       .then(switches => switches.json() as SmartThingsSwitch[]);
+  }
+
+  private getCallback() {
+    return encodeURIComponent(document.location.protocol + '//' + document.location.hostname + (document.location.port === '80' ? '' : ':' + document.location.port) + '/smart/auth');
   }
 
   // getEndpoints(): Promise<any> {

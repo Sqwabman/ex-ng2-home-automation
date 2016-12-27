@@ -4,5 +4,5 @@ export interface TcpRemote
   ip: string;
   port: number;
   name: string;
-  commands: TcpRemoteCommand;
+  commands: TcpRemoteCommand[];
 }

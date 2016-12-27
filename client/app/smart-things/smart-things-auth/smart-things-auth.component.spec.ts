@@ -3,21 +3,21 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-import { AuthComponent } from './auth.component';
+import { SmartThingsAuthComponent } from './smart-things-auth.component';
 
-describe('AuthComponent', () => {
-  let component: AuthComponent;
-  let fixture: ComponentFixture<AuthComponent>;
+describe('SmartThingsAuthComponent', () => {
+  let component: SmartThingsAuthComponent;
+  let fixture: ComponentFixture<SmartThingsAuthComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AuthComponent ]
+      declarations: [ SmartThingsAuthComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AuthComponent);
+    fixture = TestBed.createComponent(SmartThingsAuthComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
