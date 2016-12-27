@@ -11,6 +11,7 @@ const SMART_API = 'api/smart';
 
 @Injectable()
 export class SmartThingsService {
+  callback: string;
 
   constructor(private http: Http, private route: ActivatedRoute, @Inject(DOCUMENT) private document) {
   }
@@ -22,14 +23,13 @@ export class SmartThingsService {
   }
 
   authenticateLink(): string {
-    let url = document.location.protocol + '//' + document.location.hostname + (document.location.port === '80' ? '' : ':' + document.location.port) + '/smart/auth';
-    console.log(url);
-    return `${AUTH_URL}?response_type=code&client_id=${CLIENT_ID}&scope=app&redirect_uri=${url}`;
+    this.callback = document.location.protocol + '//' + document.location.hostname + (document.location.port === '80' ? '' : ':' + document.location.port) + '/smart/auth';
+    return `${AUTH_URL}?response_type=code&client_id=${CLIENT_ID}&scope=app&redirect_uri=${this.callback}`;
   }
 
   authenticate(code: string): Promise<boolean> {
     console.debug('Code', code);
-    return this.http.get(`${SMART_API}/token/${code}/${CALLBACK_URL}`)
+    return this.http.get(`${SMART_API}/token/${code}/${this.callback}`)
       .toPromise();
   }
 
