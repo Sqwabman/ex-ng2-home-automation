@@ -1,8 +1,9 @@
-import {Injectable} from '@angular/core';
+import {Injectable, Inject} from '@angular/core';
 import {Http} from "@angular/http";
 import {ActivatedRoute} from "@angular/router";
 import {SmartThingsSwitch} from "../../../../server/smart-things/smart-things-switch.interface";
 import {AUTH_URL, CLIENT_ID} from "../../../../server/smart-things/smart-things.constants";
+import {DOCUMENT} from "@angular/platform-browser";
 
 const CALLBACK_URL = encodeURIComponent('http://localhost:4200/smart/auth');
 
@@ -11,7 +12,7 @@ const SMART_API = 'api/smart';
 @Injectable()
 export class SmartThingsService {
 
-  constructor(private http: Http, private route: ActivatedRoute) {
+  constructor(private http: Http, private route: ActivatedRoute, @Inject(DOCUMENT) private document) {
   }
 
   isAuthenticated(): Promise<boolean> {
@@ -21,7 +22,9 @@ export class SmartThingsService {
   }
 
   authenticateLink(): string {
-    return `${AUTH_URL}?response_type=code&client_id=${CLIENT_ID}&scope=app&redirect_uri=${CALLBACK_URL}`;
+    let url = document.location.protocol + '//' + document.location.hostname + (document.location.port === '80' ? '' : ':' + document.location.port) + '/smart/auth';
+    console.log(url);
+    return `${AUTH_URL}?response_type=code&client_id=${CLIENT_ID}&scope=app&redirect_uri=${url}`;
   }
 
   authenticate(code: string): Promise<boolean> {

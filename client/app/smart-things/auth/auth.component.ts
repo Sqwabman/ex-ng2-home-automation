@@ -17,7 +17,7 @@ export class AuthComponent implements OnInit {
     if (code) {
       this.smartService.authenticate(code)
         .then(() => {
-          return this.router.navigate(['/smart/summary'], {queryParams: {}});
+          return this.router.navigate(['/'], {queryParams: {}});
         });
     }
   }
