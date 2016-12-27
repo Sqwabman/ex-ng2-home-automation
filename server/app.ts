@@ -30,8 +30,7 @@ app.use(express.static(path.join(__dirname, '/../client')));
 
 // catch 404 and forward to error handler
 app.use(function (req: express.Request, res: express.Response, next) {
-  let err = new Error('Not Found');
-  next(err);
+  res.sendFile(path.join(__dirname, '/../client/index.html'));
 });
 
 // production error handler

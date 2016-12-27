@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Http} from "@angular/http";
 import {ActivatedRoute} from "@angular/router";
 import {SmartThingsSwitch} from "../../../../server/smart-things/smart-things-switch.interface";
-import {AUTH_URL, CLIENT_ID} from "../../../../server/smart-things/smart-things.controller";
+import {AUTH_URL, CLIENT_ID} from "../../../../server/smart-things/smart-things.constants";
 
 const CALLBACK_URL = encodeURIComponent('http://localhost:4200/smart/auth');
 

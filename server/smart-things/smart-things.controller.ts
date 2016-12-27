@@ -3,13 +3,9 @@ import {SmartThingsInfo} from "./smart-things-info.interface";
 import {AccessToken} from "./access-token.interface";
 import {Http} from "../utility/http";
 import {SmartThingsSwitch} from "./smart-things-switch.interface";
+import {AUTH_URL, CLIENT_ID, TOKEN_URL, ENDPOINT_URL} from './smart-things.constants'
 
-export const CLIENT_ID = 'f74b7343-f83b-4335-8a30-bf1e1e94f1ad';
-const CLIENT_SECRET = '58a8906a-7cd6-4e5e-b211-7a1eeb715c5c';
-
-export const AUTH_URL = 'https://graph.api.smartthings.com/oauth/authorize';
-const TOKEN_URL = 'https://graph.api.smartthings.com/oauth/token';
-const ENDPOINT_URL = 'https://graph.api.smartthings.com/api/smartapps/endpoints';
+export const CLIENT_SECRET = '58a8906a-7cd6-4e5e-b211-7a1eeb715c5c';
 
 const DEFAULT_CONFIG = 'smartthings.json';
 const UTF8 = 'utf8';
@@ -51,7 +47,7 @@ export class SmartThingsController {
   }
 
   private getEndPoints(accessToken: AccessToken, callbackUrl: string): Promise<boolean> {
-    return this.http.get(`${ENDPOINT_URL}?grant_type=authorization_code&client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&redirect_uri=${callbackUrl}`, this.getHeader())
+    return this.http.get(`${ENDPOINT_URL}?grant_type=authorization_code&client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&redirect_uri=${callbackUrl}`, this.getHeader(accessToken))
       .then(endpoints => {
         //if there is at least one endpoint
         if (endpoints && endpoints.length > 0) {
@@ -74,14 +70,14 @@ export class SmartThingsController {
 
   public getSwitches(): Promise<SmartThingsSwitch[]> {
     if(this.info && this.info.endpoints && this.info.endpoints.length > 0) {
-      return this.http.get(`${this.info.endpoints[0].uri}/switches`, this.getHeader());
+      return this.http.get(`${this.info.endpoints[0].uri}/switches`, this.getHeader(this.info.accessToken));
     }
 
     return Promise.resolve([]);
   }
 
   public changeSwitchState(id: string, state: boolean): Promise<boolean> {
-    return this.http.put(`${this.info.endpoints[0].uri}/switches/${id}/${state ? ON : OFF}`, this.getHeader())
+    return this.http.put(`${this.info.endpoints[0].uri}/switches/${id}/${state ? ON : OFF}`, this.getHeader(this.info.accessToken))
       .then(() => true);
   }
 
@@ -90,7 +86,7 @@ export class SmartThingsController {
     fs.writeFile(this.config, JSON.stringify(this.info));
   }
 
-  private getHeader(): any {
-    return {auth: {bearer: this.info.accessToken.access_token}}
+  private getHeader(accessToken: AccessToken): any {
+    return {auth: {bearer: accessToken.access_token}}
   }
 }
