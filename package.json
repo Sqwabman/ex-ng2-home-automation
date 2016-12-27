@@ -20,7 +20,8 @@
     "test": "ng test --watch=false",
     "pree2e": "webdriver-manager update",
     "e2e": "protractor",
-    "postinstall": "npm run build"
+    "postinstall": "npm run build",
+    "deploy": "shipit pi deploy"
   },
   "author": "Ben Steele",
   "repository": {
@@ -102,6 +103,9 @@
     "nodemon": "^1.11.0",
     "protractor": "4.0.9",
     "request": "^2.79.0",
+    "shipit-cli": "^2.0.0",
+    "shipit-deploy": "git+https://github.com/vpratfr/shipit-deploy.git#bfe7b9c",
+    "shipit-npm": "^0.2.0",
     "webdriver-manager": "10.2.5"
   }
 }

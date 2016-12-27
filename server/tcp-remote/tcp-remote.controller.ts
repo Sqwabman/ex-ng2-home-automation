@@ -25,7 +25,7 @@ export class TcpRemoteController {
     });
   }
 
-  public readRemoteFile(file: string):TcpRemote {
+  public readRemoteFile(file: string):void {
     fs.exists(file, (exists) => {
       if (exists) {
         console.log('Reading remote file', this.config);
