@@ -51,9 +51,7 @@ export class SliderComponent implements OnInit {
   onMouseMove(event: MouseEvent) {
     if (this.dragX) {
       event.preventDefault();
-      let percent = (event.clientX - this.elementRef.nativeElement.offsetLeft) / this.elementRef.nativeElement.parentNode.offsetWidth;
-      let positions = Math.round(100 / this.sliderPositions);
-      percent = Math.round((percent * 100) / positions) * positions / 100;
+      let percent = (event.clientX - this.elementRef.nativeElement.getBoundingClientRect().left) / this.elementRef.nativeElement.parentNode.offsetWidth;
       this.value = Math.min(Math.max(percent, 0), 1);
     }
   }
