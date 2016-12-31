@@ -62,7 +62,7 @@ export class PhilipsHueRouter {
      * GET set light state
      */
     philipsHueRouter.put('/lights/:ip/:username/:lightId', (req: Request, res: Response, next: NextFunction) => {
-      philipsHue.setLightState({ip: req.params.ip, username: req.params.username}, req.params.lightId, req.body)
+      philipsHue.setLightStateById({ip: req.params.ip, username: req.params.username}, req.params.lightId, req.body)
         .then(lights => res.json(lights))
         .catch(error => {
           res.statusCode = 400;

@@ -6,6 +6,9 @@ import {HueBridge} from "./hue-bridge.interface";
 import {isUndefined} from "util";
 import {HueLight} from "./hue-light.interface";
 import {DeviceType} from "../devices/device-type.enum";
+import * as schedule from 'node-schedule';
+import {Device} from "../devices/device.interface";
+import {SmartThingsController} from "../smart-things/smart-things.controller";
 
 const DEFAULT_CONFIG = 'philips-hue.json';
 const UTF8 = 'utf8';
@@ -15,6 +18,8 @@ export class PhilipsHueController {
   private config: string;
   private http: Http;
   private info: PhilipsHueInfo;
+
+  away = false;
 
   private constructor() {
     this.http = new Http();
@@ -27,6 +32,27 @@ export class PhilipsHueController {
       else {
         this.info = {bridges: null};
       }
+    });
+
+    let j = schedule.scheduleJob('30 * * * * *', () => {
+      this.getAllLights()
+        .then((lights: HueLight[]) => {
+          let keyLight = lights.find(light => light.key.id === '3');
+
+          if (keyLight.info.state.reachable && this.away) {
+            lights.forEach(light => this.setLightState(light, {
+              on: true,
+              hue: 0,
+              sat: 0,
+              bri: 254,
+            }));
+            this.away = false;
+          }
+          else if (!keyLight.info.state.reachable && !this.away) {
+            this.away = true;
+            lights.forEach(light => this.setLightState(light, {on: false}));
+          }
+        });
     });
   }
 
@@ -140,9 +166,11 @@ export class PhilipsHueController {
       });
   }
 
-  public setLightState(bridge: HueBridge, id: string, state: any): Promise<boolean> {
-    let light = this.createLight(bridge, id);
+  public setLightStateById(bridge: HueBridge, id: string, state: any): Promise<boolean> {
+    return this.setLightState(this.createLight(bridge, id), state);
+  }
 
+  public setLightState(light: HueLight, state: any): Promise<boolean> {
     console.log('Setting light state', light, state);
     return this.http.put(`${this.lightUri(light)}/state`, {body: JSON.stringify(state)})
       .then((res: HueResponse[]) => {

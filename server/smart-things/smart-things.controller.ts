@@ -10,7 +10,7 @@ export const CLIENT_SECRET = '58a8906a-7cd6-4e5e-b211-7a1eeb715c5c';
 const DEFAULT_CONFIG = 'smartthings.json';
 const UTF8 = 'utf8';
 
-const ON = 'on';
+export const ON = 'on';
 const OFF = 'off';
 
 export class SmartThingsController {
@@ -88,5 +88,10 @@ export class SmartThingsController {
 
   private getHeader(accessToken: AccessToken): any {
     return {auth: {bearer: accessToken.access_token}}
+  }
+
+  public changeAll(state: boolean) {
+    return this.http.put(`${this.info.endpoints[0].uri}/switches/${state ? ON : OFF}`, this.getHeader(this.info.accessToken))
+      .then(() => true);
   }
 }

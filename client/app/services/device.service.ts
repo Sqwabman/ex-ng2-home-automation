@@ -25,4 +25,10 @@ export class DeviceService {
     } as DeviceConfiguration)
       .toPromise();
   }
+
+  setAway(away: boolean): Promise<boolean> {
+    return this.http.get(`api/devices/away/${away}`)
+      .toPromise()
+      .then(i => i.json());
+  }
 }

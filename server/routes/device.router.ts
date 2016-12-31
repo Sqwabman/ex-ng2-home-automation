@@ -4,14 +4,14 @@ import {DeviceConfiguration} from "../devices/device-configuration.interface";
 
 export class DeviceRouter {
 
-  public static init(lights: DeviceController): Router {
+  public static init(devices: DeviceController): Router {
     const deviceRouter: Router = Router();
 
     /**
      * GET a list of all lights
      */
     deviceRouter.get('/', (req: Request, res: Response, next: NextFunction) => {
-      lights.getAllDevices()
+      devices.getAllDevices()
         .then(lights => res.json(lights))
         .catch(error => {
           res.statusCode = 400;
@@ -23,12 +23,19 @@ export class DeviceRouter {
      * GET a list of all lights
      */
     deviceRouter.put('/', (req: Request, res: Response, next: NextFunction) => {
-      lights.setCapability(req.body as DeviceConfiguration)
+      devices.setCapability(req.body as DeviceConfiguration)
         .then(lights => res.json(lights))
         .catch(error => {
           res.statusCode = 400;
           res.json(error);
         });
+    });
+
+    /**
+     * GET a list of all lights
+     */
+    deviceRouter.get('/away/:away', (req: Request, res: Response, next: NextFunction) => {
+      res.json(devices.setAway(req.params.away === "true"));
     });
 
     return deviceRouter;

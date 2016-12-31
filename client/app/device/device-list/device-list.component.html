@@ -1,6 +1,10 @@
 <div class="page-header">
   <h1>Devices</h1>
 </div>
+<div>
+  <label>Away</label>
+  <button (click)="toggleAway()" [class.btn-primary]="away" [class.btn-default]="!away" class="btn">{{away ? 'On' : 'Off'}}</button>
+</div>
 <div class="row">
   <app-device-info *ngFor="let device of devices" [device]="device"></app-device-info>
 </div>

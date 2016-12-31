@@ -1,5 +1,5 @@
 import {PhilipsHueController} from "../philips-hue/philips-hue.controller";
-import {SmartThingsController} from "../smart-things/smart-things.controller";
+import {SmartThingsController, ON} from "../smart-things/smart-things.controller";
 import {Device} from "./device.interface";
 import {HueLight} from "../philips-hue/hue-light.interface";
 import {DeviceCapabilityType} from "./device-capability-type.enum";
@@ -11,6 +11,7 @@ import {HueKey} from "../philips-hue/hue-key.interface";
 import {HueState} from "../philips-hue/hue-state.interface";
 import {SmartThingsKey} from "../smart-things/smart-things-key.component";
 import Socket = SocketIO.Socket;
+import {Routine} from "./routine.interface";
 
 const DIMMABLE_LIGHT = "Dimmable light";
 const EXTENDED_COLOR_LIGHT = "Extended color light";
@@ -40,9 +41,17 @@ export class DeviceController {
       this.hue.getAllLights()
         .then(hues => hues.map(hue => this.createLightFromHue(hue))),
       this.smart.getSwitches()
-        .then(switches => switches.map(swi => this.createLightFromSmartSwitch(swi)))
+        .then(switches => switches.map(swi => this.createDeviceFromSmartSwitch(swi)))
     ])
       .then(values => [].concat.apply([], values));
+  }
+
+  getAllRoutines(): Routine[]{
+    return [{key: 0}];
+  }
+
+  runRoutine(key: number){
+
   }
 
   setCapability(config: DeviceConfiguration): Promise<any> {
@@ -51,7 +60,7 @@ export class DeviceController {
         return this.smart.changeSwitchState((config.key as SmartThingsKey).id, this.getSmartThingsSwitchState(config.capabilities));
       case DeviceType.Hue:
         let key = (config.key as HueKey);
-        return this.hue.setLightState(key.bridge, key.id, this.createHueState(config.capabilities));
+        return this.hue.setLightStateById(key.bridge, key.id, this.createHueState(config.capabilities));
     }
   }
 
@@ -98,11 +107,11 @@ export class DeviceController {
     });
   }
 
-  private createLightFromSmartSwitch(swi: SmartThingsSwitch): Device {
+  private createDeviceFromSmartSwitch(swi: SmartThingsSwitch): Device {
     return {
       key: {id: swi.id, type: DeviceType.Smart} as SmartThingsKey,
       name: swi.name,
-      capabilities: [{state: swi.on, type: DeviceCapabilityType.On_Off}],
+      capabilities: [{state: swi.value === ON, type: DeviceCapabilityType.On_Off}],
     };
   }
 
@@ -135,5 +144,10 @@ export class DeviceController {
 
     if (onOff)
       return onOff.state;
+  }
+
+  setAway(away: boolean): boolean {
+    this.hue.away = away;
+    return away;
   }
 }
